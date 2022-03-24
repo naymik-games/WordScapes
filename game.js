@@ -1,6 +1,5 @@
 let game;
-let gameOptions = {
-}
+let gameOptions = {}
 let wordy;
 let bonusTotalCount = 0;
 let arrayWords = [];
@@ -49,7 +48,7 @@ let gameLevels = [
   }
 
 ];
-window.onload = function () {
+window.onload = function() {
   let gameConfig = {
     type: Phaser.AUTO,
     backgroundColor: 0x05adb0,
@@ -118,22 +117,31 @@ class playGame extends Phaser.Scene {
     console.log(finalCombo)
     var finalCombo1 = this.shuffle(finalCombo)
     console.log(finalCombo1)
-    var words = finalCombo1.slice(0, 6);
-    var board = Create(words);
+    this.words = finalCombo1.slice(0, 6);
+    var board = Create(this.words);
     console.log(board);
 
+    this.guess = '';
+    this.scoreList = [];
 
     this.blockSize = game.config.width / board[0].length
+   if(this.blockSize > 90){
+     this.blockSize = 90
+   }
+    console.log(this.blockSize)
     this.createBoard(board);
 
-    this.line = new Phaser.Geom.Line(game.config.width / 2 - 200, 920, game.config.width / 2 + 200, 920);
+    this.line = new Phaser.Geom.Line(game.config.width / 2 - 200, 1100, game.config.width / 2 + 200, 1100);
 
     var totalPoints = base.length;
     var points = []
     for (var i = 1; i <= totalPoints; i++) {
       var p = this.drawPoint(175, i, totalPoints);
       var ind = this.tileLetters.indexOf(base[i - 1])
-      var tile = this.add.image(p.x, p.y, 'tiles', ind).setScale(1.25)
+      var tile = this.add.image(p.x, p.y, 'tiles', ind).setScale(1.25).setInteractive()
+      tile.inedex = ind
+      tile.letter = base[i - 1]
+      tile.type = 'key'
     }
 
     console.log(points)
@@ -146,10 +154,11 @@ class playGame extends Phaser.Scene {
     //graphics.lineTo(x, y);
     //graphics.moveTo(x, y);
     //  this.cameras.main.startFollow(this.hero, true, 0, 0.5, 0, - (game.config.height / 2 - game.config.height * gameOptions.firstPlatformPosition));
-    //this.input.on("gameobjectdown", this.clickDot, this);
-    //this.input.on("gameobjectup", this.upDot, this);
-    //this.input.on("gameobjectover", this.overDot, this);
+    this.input.on("gameobjectdown", this.clickDot, this);
+    this.input.on("pointerup", this.upDot, this);
+    this.input.on("gameobjectover", this.overDot, this);
 
+this.instructText = this.add.bitmapText(60, 1200, 'clarendon', 'Test', 35).setOrigin(0).setTint(0xffffff).setMaxWidth(700);
 
 
 
@@ -157,6 +166,61 @@ class playGame extends Phaser.Scene {
 
   update() {
 
+  }
+  clickDot(pointer, tile) {
+    if (tile.type == 'key') {
+      this.guess += tile.letter
+      tile.setAlpha(.5)
+      console.log(this.guess)
+      this.selected = tile;
+      this.scoreList.push(tile);
+    }
+  }
+  overDot(pointer, tile) {
+    if (tile.type == 'key') {
+      if (this.scoreList[this.scoreList.length - 2] === tile) {
+        // If you move your mouse back to you're previous match, deselect you're last match
+        // This is so the player can choose a different path 
+        this.scoreList.pop();
+        this.selected.setAlpha(1);
+        this.guess -= tile.letter;
+        //this.guess = this.guess.slice(0, -1);
+       // this.guess.setText(this.guessWord);
+
+        tile.setAlpha(1);
+        this.selected = tile;
+
+      } else if (this.scoreList.indexOf(tile) > -1 && this.scoreList.length > 3) {
+        // If the Item is in the list (but isn't the previous item) then you've made a loop
+        //this.looped = true;
+      } else {
+        //console.log('sel ' + this.selected.frameNum);
+        // console.log('dot ' + dot.frameNum);
+
+        this.selected = tile;
+
+        if (this.scoreList.indexOf(tile) === -1) {
+          tile.setAlpha(0.5);
+          this.guess += tile.letter;
+
+          //this.guess.setAlpha(1);
+         // this.guess.setText(this.guessWord);
+          this.scoreList.push(tile);
+
+        }
+      }
+
+    }
+  }
+  upDot(pointer, tile) {
+    console.log(this.guess)
+    this.selected = null
+    
+    this.guess = '';
+    for (var i = 0; i < this.scoreList.length; i++) {
+      this.scoreList[i].setAlpha(1)
+    }
+    this.scoreList = []
   }
   filterList(item) {
     return item.length > 2 && item.length < 6;
@@ -174,6 +238,7 @@ class playGame extends Phaser.Scene {
           tileAnswer.word = board[i][j].word
           var ind = this.tileLetters.indexOf(board[i][j].letter)
           tileAnswer.index = ind
+          tileAnswer.type = 'answer'
           // tileAnswer.setFrame(ind)
           //console.log(tileAnswer.word)
         }
@@ -193,7 +258,8 @@ class playGame extends Phaser.Scene {
     return point
   }
   shuffle(array) {
-    let currentIndex = array.length, randomIndex;
+    let currentIndex = array.length,
+      randomIndex;
 
     // While there remain elements to shuffle...
     while (currentIndex != 0) {
@@ -214,7 +280,7 @@ class playGame extends Phaser.Scene {
 //var letterInput = wordy;
 //var foundWords = document.getElementById('words');
 
-var findWords = function (letterInput) {
+var findWords = function(letterInput) {
   //  console.log(ScrabbleWordFinder.find(letterInput));
   return ScrabbleWordFinder.find(letterInput);
 
@@ -226,19 +292,19 @@ var findWords = function (letterInput) {
 
 
 var ScrabbleWordFinder = (() => {
-  var ScrabbleWordFinder = function () {
+  var ScrabbleWordFinder = function() {
     //this.dict = new ScrabbleDictionary(ScrabbleWordList);
     this.dict = new ScrabbleDictionary(ScrabbleWordList);
 
   };
 
-  ScrabbleWordFinder.prototype.find = function (letters) {
+  ScrabbleWordFinder.prototype.find = function(letters) {
 
     //console.log(validWords(this.dict.root, letters));
     return validWords(this.dict.root, letters);
   };
 
-  var validWords = function (node, letters, word = '', results = []) {
+  var validWords = function(node, letters, word = '', results = []) {
 
     if (node.isWord) {
       results.push(word);
@@ -255,16 +321,16 @@ var ScrabbleWordFinder = (() => {
     return results;
   };
 
-  var ScrabbleDictionary = function (words) {
+  var ScrabbleDictionary = function(words) {
     this.root = new ScrabbleTrieNode();
     words.forEach(word => this.insert(word));
   };
 
-  var ScrabbleTrieNode = function () {
+  var ScrabbleTrieNode = function() {
     this.children = Object.create(null);
   };
 
-  ScrabbleDictionary.prototype.insert = function (word) {
+  ScrabbleDictionary.prototype.insert = function(word) {
     var cursor = this.root;
     for (let letter of word) {
       if (!cursor.children[letter]) {

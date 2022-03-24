@@ -276,7 +276,7 @@ class playGame extends Phaser.Scene {
       this.initLetters();
       return
     }
-    this.selected = dot;
+    
     dot.setAlpha(0.5);
     //reset guess text
     this.guess.setPosition(game.config.width / 2, 660);
@@ -284,7 +284,7 @@ class playGame extends Phaser.Scene {
 
     this.guessWord += dot.letter;
     this.guess.setText(this.guessWord);
-
+    this.selected = dot;
     this.scoreList.push(dot);
 
   }

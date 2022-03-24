@@ -5,7 +5,7 @@ class preloadGame extends Phaser.Scene {
   preload() {
     this.load.image("pixel", "assets/sprites/particle.png");
     this.load.image("star", "assets/yellow-star.png");
-
+    this.load.bitmapFont("clarendon", "assets/fonts/clarendon.png", "assets/fonts/clarendon.xml");
     this.load.image("hero", "assets/hero.png");
     this.load.image("platform", "assets/platform.png");
     this.load.image("particle", "assets/sprites/particle.png");
