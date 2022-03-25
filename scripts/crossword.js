@@ -65,9 +65,9 @@ function CleanVars() {
   wordsActive = [];
   board = [];
 
-  for (var i = 0; i < 32; i++) {
+  for (var i = 0; i < 24; i++) {
     board.push([]);
-    for (var j = 0; j < 32; j++) {
+    for (var j = 0; j < 24; j++) {
       board[i].push(null);
     }
   }
@@ -242,11 +242,13 @@ function AddWordToBoard() {
 
     if (matchData.dir === 0) {
       xIndex += i;
-      board[xIndex][yIndex] = { letter: wordsActive[pushIndex].char[i], word: wordsActive[pushIndex].char.join('') };
+      //board[xIndex][yIndex] = { letter: wordsActive[pushIndex].char[i], word: wordsActive[pushIndex].char.join('') };
+      board[xIndex][yIndex] = { letter: wordsActive[pushIndex].char[i], word: wordsActive[pushIndex].string };
     }
     else {
       yIndex += i;
-      board[xIndex][yIndex] = { letter: wordsActive[pushIndex].char[i], word: wordsActive[pushIndex].char.join('') };
+      //board[xIndex][yIndex] = { letter: wordsActive[pushIndex].char[i], word: wordsActive[pushIndex].char.join('') };
+      board[xIndex][yIndex] = { letter: wordsActive[pushIndex].char[i], word: wordsActive[pushIndex].string };
     }
 
     Bounds.Update(xIndex, yIndex);
@@ -259,7 +261,7 @@ function AddWordToBoard() {
 
 function BoardToArray(blank) {
   var newBoard = []
-  for (var i = Bounds.top - 1, str = ""; i < Bounds.bottom + 2; i++) {
+  for (var i = Bounds.top - 1; i < Bounds.bottom + 2; i++) {
     var temp = []
 
     for (var j = Bounds.left - 1; j < Bounds.right + 2; j++) {
