@@ -7,6 +7,17 @@ class preloadGame extends Phaser.Scene {
 
     this.load.bitmapFont("clarendon", "assets/fonts/lato.png", "assets/fonts/lato.xml");
     this.load.image("star", "assets/sprites/star.png");
+    this.load.image("back_01", "assets/sprites/backs/back_01.png");
+    this.load.image("back_02", "assets/sprites/backs/back_02.png");
+    this.load.image("back_03", "assets/sprites/backs/back_03.png");
+    this.load.image("back_04", "assets/sprites/backs/back_04.png");
+    this.load.image("back_05", "assets/sprites/backs/back_05.png");
+    this.load.image("back_06", "assets/sprites/backs/back_06.png");
+    this.load.image("back_07", "assets/sprites/backs/back_07.png");
+    this.load.image("back_08", "assets/sprites/backs/back_08.png");
+    this.load.image("back_09", "assets/sprites/backs/back_09.png");
+
+
     this.load.image("platform", "assets/platform.png");
     this.load.image("particle", "assets/sprites/particle.png");
     this.load.text('dictionary', 'assets/dictionary-plural1.txt');

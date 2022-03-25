@@ -40,6 +40,7 @@ class playGame extends Phaser.Scene {
 
   }
   create() {
+
     this.bgcolors = [0x474646, 0xba9696, 0x96baa4, 0x96bab6, 0x96adba, 0x222222];
 
     this.board = [];
@@ -95,6 +96,10 @@ class playGame extends Phaser.Scene {
     } else {
       this.blockSize = game.config.width / board[0].length
     }
+    var rand = Phaser.Math.Between(0, 8)
+    var back = this.add.image(0, 0, backs[rand]).setOrigin(0)
+    back.displayWidth = game.config.width;
+    back.displayHeight = game.config.height;
 
     /* if (this.blockSize > 90) {
       this.blockSize = 90
@@ -123,14 +128,15 @@ class playGame extends Phaser.Scene {
     this.input.on("pointerup", this.upDot, this);
     this.input.on("gameobjectover", this.overDot, this);
 
-    this.levelText = this.add.bitmapText(200, 75, 'clarendon', 'Level ' + onLevel, 120).setOrigin(0, .5).setTint(0xffffff).setMaxWidth(700);
+    var tempL = onLevel + 1;
+    this.levelText = this.add.bitmapText(200, 75, 'clarendon', 'Level ' + tempL, 120).setOrigin(0, .5).setTint(0xffffff).setMaxWidth(700);
 
 
     this.starBack = this.add.image(640, 75, 'platform').setOrigin(0, .5).setTint(0x000000).setAlpha(.7);
     this.starBack.displayWidth = 250
     this.starBack.displayHeight = 75
 
-    this.bonusEarnedText = this.add.bitmapText(715, 75, 'clarendon', 3210, 80).setOrigin(0, .5).setTint(0xffffff).setMaxWidth(700);
+    this.bonusEarnedText = this.add.bitmapText(715, 75, 'clarendon', gameData.coins, 80).setOrigin(0, .5).setTint(0xffffff).setMaxWidth(700);
     this.starIcon = this.add.image(640, 75, 'star').setScale(.25)
 
     this.star = this.add.image(100, 1550, 'star').setScale(.3)
@@ -296,6 +302,8 @@ class playGame extends Phaser.Scene {
           if (this.puzzleFound == this.words.length) {
             bonusEarned += this.bonusFound
             onLevel++;
+            gameData.level = onLevel;
+            localStorage.setItem('WSdata', JSON.stringify(gameData));
             this.scene.start("PlayGame");
 
           }
