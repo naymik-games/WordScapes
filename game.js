@@ -88,7 +88,7 @@ class playGame extends Phaser.Scene {
     // console.log(finalCombo1)
     this.words = finalCombo1.slice(0, 8);
     var board = Create(this.words);
-    console.log(this.words);
+   // console.log(this.words);
 
     if (board.length > board[0].length) {
       this.blockSize = game.config.width / board.length
@@ -142,7 +142,7 @@ class playGame extends Phaser.Scene {
 
   }
   clickDot(pointer, tile) {
-    console.log(tile)
+    //console.log(tile)
     if (tile.type == 'shuffle') {
       this.shuffleKeys()
       return
@@ -336,12 +336,12 @@ class playGame extends Phaser.Scene {
       tile.type = 'key'
       this.keys.push(tile)
     }
-    console.log(this.keys)
+   // console.log(this.keys)
 
   }
   shuffleKeys() {
     this.shuffle(this.keyCoordinates)
-    console.log('shuffle keys')
+   // console.log('shuffle keys')
     for (var i = 0; i < this.keys.length; i++) {
       this.keys[i].setPosition(this.keyCoordinates[i].x, this.keyCoordinates[i].y)
     }
@@ -370,7 +370,7 @@ class playGame extends Phaser.Scene {
 
       }
     }
-    console.log(board)
+  //  console.log(board)
   }
   drawPoint(r, currentPoint, totalPoints) {
     var point = {}
