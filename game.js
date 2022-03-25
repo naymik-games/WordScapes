@@ -110,7 +110,7 @@ class playGame extends Phaser.Scene {
       visible: false,
       active: false
     });
-    var base = 'coats'
+    var base = 'closet'
     console.log(base)
     var wordCombos = findWords(base);
     var finalCombo = wordCombos.filter(this.filterList)
@@ -147,6 +147,7 @@ class playGame extends Phaser.Scene {
     console.log(points)
 
     var graphics = this.add.graphics({ lineStyle: { width: 4, color: 0xffffff } });
+    this.graphics = this.add.graphics({ lineStyle: { width: 20, color: 0xff0000 } });
 
     graphics.strokeLineShape(this.line);
     //graphics.strokeLineShape(line); // line: {x1, y1, x2, y2}
@@ -158,7 +159,7 @@ class playGame extends Phaser.Scene {
     this.input.on("pointerup", this.upDot, this);
     this.input.on("gameobjectover", this.overDot, this);
 
-this.instructText = this.add.bitmapText(60, 1200, 'clarendon', 'Test', 35).setOrigin(0).setTint(0xffffff).setMaxWidth(700);
+this.guessText = this.add.bitmapText(450, 1050, 'clarendon', '', 65).setOrigin(.5).setTint(0xffffff).setMaxWidth(700);
 
 
 
@@ -172,6 +173,8 @@ this.instructText = this.add.bitmapText(60, 1200, 'clarendon', 'Test', 35).setOr
       this.guess += tile.letter
       tile.setAlpha(.5)
       console.log(this.guess)
+      this.guessText.setText(this.guess);
+
       this.selected = tile;
       this.scoreList.push(tile);
     }
@@ -185,7 +188,7 @@ this.instructText = this.add.bitmapText(60, 1200, 'clarendon', 'Test', 35).setOr
         this.selected.setAlpha(1);
         this.guess -= tile.letter;
         //this.guess = this.guess.slice(0, -1);
-       // this.guess.setText(this.guessWord);
+        this.guessText.setText(this.guess);
 
         tile.setAlpha(1);
         this.selected = tile;
@@ -204,9 +207,10 @@ this.instructText = this.add.bitmapText(60, 1200, 'clarendon', 'Test', 35).setOr
           this.guess += tile.letter;
 
           //this.guess.setAlpha(1);
-         // this.guess.setText(this.guessWord);
+          this.guessText.setText(this.guess);
           this.scoreList.push(tile);
-
+          var line1 = new Phaser.Geom.Line(this.scoreList[this.scoreList.length - 2].x, this.scoreList[this.scoreList.length - 2].y, tile.x, tile.y);
+          this.graphics.strokeLineShape(line1);
         }
       }
 
@@ -215,15 +219,17 @@ this.instructText = this.add.bitmapText(60, 1200, 'clarendon', 'Test', 35).setOr
   upDot(pointer, tile) {
     console.log(this.guess)
     this.selected = null
-    
+    this.graphics.clear()
     this.guess = '';
     for (var i = 0; i < this.scoreList.length; i++) {
       this.scoreList[i].setAlpha(1)
     }
+    this.guessText.setText(this.guess);
+
     this.scoreList = []
   }
   filterList(item) {
-    return item.length > 2 && item.length < 6;
+    return item.length > 2 && item.length < 7;
   }
   createBoard(board) {
     for (var i = 0; i < board.length; i++) {
