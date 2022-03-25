@@ -225,7 +225,7 @@ function AddWordToBoard() {
 
   var spliced = wordBank.splice(curIndex, 1);
   wordsActive.push(spliced[0]);
-
+  //console.log(wordsActive)
   var pushIndex = wordsActive.length - 1,
     rand = Math.random(),
     matchArr = wordsActive[pushIndex].successfulMatches,

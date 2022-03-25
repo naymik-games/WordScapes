@@ -48,7 +48,7 @@ let gameLevels = [
   }
 
 ];
-window.onload = function() {
+window.onload = function () {
   let gameConfig = {
     type: Phaser.AUTO,
     backgroundColor: 0x05adb0,
@@ -110,45 +110,41 @@ class playGame extends Phaser.Scene {
       visible: false,
       active: false
     });
-    var base = 'closet'
-    console.log(base)
-    var wordCombos = findWords(base);
-    var finalCombo = wordCombos.filter(this.filterList)
-    console.log(finalCombo)
-    var finalCombo1 = this.shuffle(finalCombo)
-    console.log(finalCombo1)
-    this.words = finalCombo1.slice(0, 6);
-    var board = Create(this.words);
-    console.log(board);
 
     this.guess = '';
     this.scoreList = [];
+    this.foundWords = [];
+    this.puzzleFound = 0;
+
+    var base = 'closet'
+    //  console.log(base)
+    var wordCombos = findWords(base);
+    var finalCombo = wordCombos.filter(this.filterList)
+    // console.log(finalCombo)
+    var finalCombo1 = this.shuffle(finalCombo)
+    // console.log(finalCombo1)
+    this.words = finalCombo1.slice(0, 6);
+    var board = Create(this.words);
+    console.log(this.words);
 
     this.blockSize = game.config.width / board[0].length
-   if(this.blockSize > 90){
-     this.blockSize = 90
-   }
-    console.log(this.blockSize)
+    if (this.blockSize > 90) {
+      this.blockSize = 90
+    }
+    //console.log(this.blockSize)
     this.createBoard(board);
 
-    this.line = new Phaser.Geom.Line(game.config.width / 2 - 200, 1100, game.config.width / 2 + 200, 1100);
 
-    var totalPoints = base.length;
-    var points = []
-    for (var i = 1; i <= totalPoints; i++) {
-      var p = this.drawPoint(175, i, totalPoints);
-      var ind = this.tileLetters.indexOf(base[i - 1])
-      var tile = this.add.image(p.x, p.y, 'tiles', ind).setScale(1.25).setInteractive()
-      tile.inedex = ind
-      tile.letter = base[i - 1]
-      tile.type = 'key'
-    }
 
-    console.log(points)
+    this.createKeys(base.length, base)
+
+
+
 
     var graphics = this.add.graphics({ lineStyle: { width: 4, color: 0xffffff } });
-    this.graphics = this.add.graphics({ lineStyle: { width: 20, color: 0xff0000 } });
-
+    this.graphicsLine = this.add.graphics({ lineStyle: { width: 20, color: 0xff0000 } });
+    this.graphicsCircle = this.add.graphics({ lineStyle: { width: 20, color: 0xff0000 }, fillStyle: { color: 0xff0000 } });
+    this.line = new Phaser.Geom.Line(game.config.width / 2 - 200, 1050, game.config.width / 2 + 200, 1050);
     graphics.strokeLineShape(this.line);
     //graphics.strokeLineShape(line); // line: {x1, y1, x2, y2}
     //graphics.lineBetween(x1, y1, x2, y2);
@@ -159,7 +155,7 @@ class playGame extends Phaser.Scene {
     this.input.on("pointerup", this.upDot, this);
     this.input.on("gameobjectover", this.overDot, this);
 
-this.guessText = this.add.bitmapText(450, 1050, 'clarendon', '', 65).setOrigin(.5).setTint(0xffffff).setMaxWidth(700);
+    this.guessText = this.add.bitmapText(450, 1000, 'clarendon', '', 85).setOrigin(.5).setTint(0xffffff).setMaxWidth(700);
 
 
 
@@ -172,14 +168,15 @@ this.guessText = this.add.bitmapText(450, 1050, 'clarendon', '', 65).setOrigin(.
     if (tile.type == 'key') {
       this.guess += tile.letter
       tile.setAlpha(.5)
-      console.log(this.guess)
+      //console.log(this.guess)
       this.guessText.setText(this.guess);
-
       this.selected = tile;
       this.scoreList.push(tile);
+      this.graphicsCircle.fillCircle(tile.x, tile.y, 20)
     }
   }
   overDot(pointer, tile) {
+    if (this.selected === null || tile.word || tile.solve || tile.shuffle) { return; }
     if (tile.type == 'key') {
       if (this.scoreList[this.scoreList.length - 2] === tile) {
         // If you move your mouse back to you're previous match, deselect you're last match
@@ -206,20 +203,23 @@ this.guessText = this.add.bitmapText(450, 1050, 'clarendon', '', 65).setOrigin(.
           tile.setAlpha(0.5);
           this.guess += tile.letter;
 
-          //this.guess.setAlpha(1);
           this.guessText.setText(this.guess);
           this.scoreList.push(tile);
           var line1 = new Phaser.Geom.Line(this.scoreList[this.scoreList.length - 2].x, this.scoreList[this.scoreList.length - 2].y, tile.x, tile.y);
-          this.graphics.strokeLineShape(line1);
+          this.graphicsLine.strokeLineShape(line1);
+          this.graphicsCircle.fillCircle(tile.x, tile.y, 20)
         }
       }
 
     }
   }
   upDot(pointer, tile) {
+    if (this.selected == null) { return }
     console.log(this.guess)
     this.selected = null
-    this.graphics.clear()
+    this.graphicsLine.clear()
+    this.graphicsCircle.clear()
+    this.checkAnswer(this.guess)
     this.guess = '';
     for (var i = 0; i < this.scoreList.length; i++) {
       this.scoreList[i].setAlpha(1)
@@ -228,8 +228,52 @@ this.guessText = this.add.bitmapText(450, 1050, 'clarendon', '', 65).setOrigin(.
 
     this.scoreList = []
   }
+  checkAnswer(answer) {
+    if (answer.length < 3) {
+      // not long enough
+      this.cameras.main.shake(200, 0.02);
+
+    } else if (this.foundWords.indexOf(answer) > -1) {
+      //all ready found
+      this.cameras.main.shake(200, 0.02);
+    } else if (this.words.indexOf(answer) > -1) {
+      //found puzzle word
+      console.log('found it!')
+      this.puzzleFound++;
+
+      this.revealWord(answer)
+      this.foundWords.push(answer)
+      if (this.puzzleFound == this.words.length) {
+        alert('completed!')
+      }
+    } else if (ScrabbleWordList.indexOf(answer) > -1) {
+      //found bonus
+      this.foundWords.push(answer)
+    }
+  }
+  revealWord(answer) {
+    for (var i = 0; i < board.length; i++) {
+      for (var j = 0; j < board[0].length; j++) {
+        if (board[i][j] != null) {
+          if (board[i][j].tile.word == answer) {
+            board[i][j].tile.setFrame(board[i][j].tile.index)
+          }
+        }
+      }
+    }
+  }
   filterList(item) {
     return item.length > 2 && item.length < 7;
+  }
+  createKeys(totalPoints, base) {
+    for (var i = 1; i <= totalPoints; i++) {
+      var p = this.drawPoint(200, i, totalPoints);
+      var ind = this.tileLetters.indexOf(base[i - 1])
+      var tile = this.add.image(p.x, p.y, 'tiles', ind).setScale(1.5).setInteractive()
+      tile.inedex = ind
+      tile.letter = base[i - 1]
+      tile.type = 'key'
+    }
   }
   createBoard(board) {
     for (var i = 0; i < board.length; i++) {
@@ -245,6 +289,7 @@ this.guessText = this.add.bitmapText(450, 1050, 'clarendon', '', 65).setOrigin(.
           var ind = this.tileLetters.indexOf(board[i][j].letter)
           tileAnswer.index = ind
           tileAnswer.type = 'answer'
+          board[i][j].tile = tileAnswer
           // tileAnswer.setFrame(ind)
           //console.log(tileAnswer.word)
         }
@@ -252,6 +297,7 @@ this.guessText = this.add.bitmapText(450, 1050, 'clarendon', '', 65).setOrigin(.
 
       }
     }
+    console.log(board)
   }
   drawPoint(r, currentPoint, totalPoints) {
     var point = {}
@@ -259,7 +305,7 @@ this.guessText = this.add.bitmapText(450, 1050, 'clarendon', '', 65).setOrigin(.
     var angle = (theta * currentPoint);
 
     point.x = (r * Math.cos(angle - (90 * (Math.PI / 180))) + 450);
-    point.y = (r * Math.sin(angle - (90 * (Math.PI / 180))) + 1400);
+    point.y = (r * Math.sin(angle - (90 * (Math.PI / 180))) + 1350);
 
     return point
   }
@@ -286,7 +332,7 @@ this.guessText = this.add.bitmapText(450, 1050, 'clarendon', '', 65).setOrigin(.
 //var letterInput = wordy;
 //var foundWords = document.getElementById('words');
 
-var findWords = function(letterInput) {
+var findWords = function (letterInput) {
   //  console.log(ScrabbleWordFinder.find(letterInput));
   return ScrabbleWordFinder.find(letterInput);
 
@@ -298,19 +344,19 @@ var findWords = function(letterInput) {
 
 
 var ScrabbleWordFinder = (() => {
-  var ScrabbleWordFinder = function() {
+  var ScrabbleWordFinder = function () {
     //this.dict = new ScrabbleDictionary(ScrabbleWordList);
     this.dict = new ScrabbleDictionary(ScrabbleWordList);
 
   };
 
-  ScrabbleWordFinder.prototype.find = function(letters) {
+  ScrabbleWordFinder.prototype.find = function (letters) {
 
     //console.log(validWords(this.dict.root, letters));
     return validWords(this.dict.root, letters);
   };
 
-  var validWords = function(node, letters, word = '', results = []) {
+  var validWords = function (node, letters, word = '', results = []) {
 
     if (node.isWord) {
       results.push(word);
@@ -327,16 +373,16 @@ var ScrabbleWordFinder = (() => {
     return results;
   };
 
-  var ScrabbleDictionary = function(words) {
+  var ScrabbleDictionary = function (words) {
     this.root = new ScrabbleTrieNode();
     words.forEach(word => this.insert(word));
   };
 
-  var ScrabbleTrieNode = function() {
+  var ScrabbleTrieNode = function () {
     this.children = Object.create(null);
   };
 
-  ScrabbleDictionary.prototype.insert = function(word) {
+  ScrabbleDictionary.prototype.insert = function (word) {
     var cursor = this.root;
     for (let letter of word) {
       if (!cursor.children[letter]) {
