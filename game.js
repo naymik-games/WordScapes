@@ -301,6 +301,7 @@ class playGame extends Phaser.Scene {
           } */
           if (this.puzzleFound == this.words.length) {
             bonusEarned += this.bonusFound
+            gameData.coins = bonusEarned
             onLevel++;
             gameData.level = onLevel;
             localStorage.setItem('WSdata', JSON.stringify(gameData));
@@ -372,7 +373,13 @@ class playGame extends Phaser.Scene {
     this.shuffle(this.keyCoordinates)
     // console.log('shuffle keys')
     for (var i = 0; i < this.keys.length; i++) {
-      this.keys[i].setPosition(this.keyCoordinates[i].x, this.keyCoordinates[i].y)
+     // this.keys[i].setPosition(this.keyCoordinates[i].x, this.keyCoordinates[i].y)
+      var tween = this.tweens.add({
+        targets: this.keys[i],
+        x: this.keyCoordinates[i].x,
+        y: this.keyCoordinates[i].y,
+        duration: 300
+      })
     }
 
   }
