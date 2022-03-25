@@ -19,7 +19,7 @@ window.onload = function () {
       height: 1640
     },
 
-    scene: [preloadGame, home, playGame]
+    scene: [preloadGame, home, playGame, endLevel]
   }
   game = new Phaser.Game(gameConfig);
   window.focus();
@@ -88,7 +88,7 @@ class playGame extends Phaser.Scene {
     // console.log(finalCombo1)
     this.words = finalCombo1.slice(0, 8);
     var board = Create(this.words);
-   // console.log(this.words);
+    // console.log(this.words);
 
     if (board.length > board[0].length) {
       this.blockSize = game.config.width / board.length
@@ -123,8 +123,15 @@ class playGame extends Phaser.Scene {
     this.input.on("pointerup", this.upDot, this);
     this.input.on("gameobjectover", this.overDot, this);
 
-    this.bonusEarnedText = this.add.bitmapText(800, 50, 'clarendon', bonusEarned, 60).setOrigin(0, .5).setTint(0x000000).setMaxWidth(700);
+    this.levelText = this.add.bitmapText(200, 75, 'clarendon', 'Level ' + onLevel, 120).setOrigin(0, .5).setTint(0xffffff).setMaxWidth(700);
 
+
+    this.starBack = this.add.image(640, 75, 'platform').setOrigin(0, .5).setTint(0x000000).setAlpha(.7);
+    this.starBack.displayWidth = 250
+    this.starBack.displayHeight = 75
+
+    this.bonusEarnedText = this.add.bitmapText(715, 75, 'clarendon', 3210, 80).setOrigin(0, .5).setTint(0xffffff).setMaxWidth(700);
+    this.starIcon = this.add.image(640, 75, 'star').setScale(.25)
 
     this.star = this.add.image(100, 1550, 'star').setScale(.3)
     this.guessText = this.add.bitmapText(450, 990, 'clarendon', '', 130).setOrigin(.5).setTint(0xffffff).setMaxWidth(700);
@@ -164,6 +171,14 @@ class playGame extends Phaser.Scene {
         this.letterButton.setScale(1).clearTint()
       } else if (this.revealWord) {
         this.revealAnswer(tile.word)
+        this.puzzleFound++;
+        this.foundWords.push(tile.word)
+        if (this.puzzleFound == this.words.length) {
+          bonusEarned += this.bonusFound
+          onLevel++;
+          this.scene.start("PlayGame");
+
+        }
         this.revealWord = false;
         this.wordButton.setScale(1).clearTint()
       } else {
@@ -245,7 +260,13 @@ class playGame extends Phaser.Scene {
       this.guessText.setText(this.guess);
     } else if (this.foundWords.indexOf(answer) > -1) {
       //all ready found
-      this.cameras.main.shake(200, 0.02);
+      //this.cameras.main.shake(200, 0.02);
+      var tween = this.tweens.add({
+        targets: this.star,
+        scale: .5,
+        yoyo: true,
+        duration: 300
+      })
       this.guess = '';
       this.guessText.setText(this.guess);
     } else if (this.words.indexOf(answer) > -1) {
@@ -336,12 +357,12 @@ class playGame extends Phaser.Scene {
       tile.type = 'key'
       this.keys.push(tile)
     }
-   // console.log(this.keys)
+    // console.log(this.keys)
 
   }
   shuffleKeys() {
     this.shuffle(this.keyCoordinates)
-   // console.log('shuffle keys')
+    // console.log('shuffle keys')
     for (var i = 0; i < this.keys.length; i++) {
       this.keys[i].setPosition(this.keyCoordinates[i].x, this.keyCoordinates[i].y)
     }
@@ -352,7 +373,7 @@ class playGame extends Phaser.Scene {
       for (var j = 0; j < board[0].length; j++) {
         if (board[i][j] != null) {
           var xpos = 25 + j * this.blockSize
-          var ypos = 100 + i * this.blockSize
+          var ypos = 150 + i * this.blockSize
           var tileAnswer = this.answerTiles.get();
           tileAnswer.displayWidth = this.blockSize
           tileAnswer.displayHeight = this.blockSize
@@ -370,7 +391,7 @@ class playGame extends Phaser.Scene {
 
       }
     }
-  //  console.log(board)
+    //  console.log(board)
   }
   drawPoint(r, currentPoint, totalPoints) {
     var point = {}
