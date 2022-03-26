@@ -96,7 +96,7 @@ class playGame extends Phaser.Scene {
     } else {
       this.blockSize = game.config.width / board[0].length
     }
-    var rand = Phaser.Math.Between(0, 8)
+    var rand = Phaser.Math.Between(0, 11)
     var back = this.add.image(0, 0, backs[rand]).setOrigin(0)
     back.displayWidth = game.config.width;
     back.displayHeight = game.config.height;

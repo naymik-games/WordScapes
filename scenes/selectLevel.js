@@ -7,6 +7,10 @@ class selectLevel extends Phaser.Scene {
   }
   create() {
     this.cameras.main.setBackgroundColor(0xf7eac6);
+    var rand = Phaser.Math.Between(0, 11)
+    var back = this.add.image(0, 0, backs[rand]).setOrigin(0)
+    back.displayWidth = game.config.width;
+    back.displayHeight = game.config.height;
     this.startGroup = onBook;
 
 
@@ -117,9 +121,9 @@ class selectLevel extends Phaser.Scene {
 
     groupBox.add(groupText);
     if (dir == 'left') {
-      var xDir = +850
-    } else if (dir == 'right') {
       var xDir = -850
+    } else if (dir == 'right') {
+      var xDir = +850
     }
     groupBox.setPosition(xDir, 0);
     this.groupBox = groupBox;
@@ -140,9 +144,9 @@ class selectLevel extends Phaser.Scene {
 
   hideGroup(num, dir) {
     if (dir == 'left') {
-      var xDir = -850
-    } else if (dir == 'right') {
       var xDir = +850
+    } else if (dir == 'right') {
+      var xDir = -850
     }
     this.tweens.add({
       targets: this.groupBox,
@@ -178,7 +182,7 @@ class selectLevel extends Phaser.Scene {
   clickHandler(e, block) {
 
     if (block.level == -2) {
-      this.scene.start('startGame');
+      this.scene.start('home');
     }
 
   }

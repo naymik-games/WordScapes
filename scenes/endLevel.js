@@ -7,11 +7,16 @@ class endLevel extends Phaser.Scene {
   }
   create() {
     var tempL = onLevel - 1;
-    this.levelDoneText = this.add.bitmapText(450, 800, 'clarendon', 'Level ' + tempL + 'Completed', 100).setOrigin(.5).setTint(0xffffff).setMaxWidth(700);
+    this.levelDoneText = this.add.bitmapText(450, 800, 'clarendon', 'Level ' + tempL + ' Completed', 100).setOrigin(.5).setTint(0xffffff).setMaxWidth(700);
     this.nextLevelText = this.add.bitmapText(450, 900, 'clarendon', 'Play Level ' + onLevel, 100).setOrigin(.5).setTint(0xffffff).setMaxWidth(700).setInteractive();
     this.nextLevelText.on('pointerdown', function () {
       this.scene.stop()
       this.scene.start('PlayGame')
+    }, this)
+    this.selectLevelText = this.add.bitmapText(450, 1200, 'clarendon', 'Levels', 100).setOrigin(.5).setTint(0xffffff).setMaxWidth(700).setInteractive();
+    this.selectLevelText.on('pointerdown', function () {
+      this.scene.stop()
+      this.scene.start('selectLevel')
     }, this)
   }
 }
