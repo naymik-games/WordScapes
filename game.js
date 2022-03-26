@@ -10,7 +10,7 @@ let arrayWords = [];
 window.onload = function () {
   let gameConfig = {
     type: Phaser.AUTO,
-    
+
     scale: {
       mode: Phaser.Scale.FIT,
       autoCenter: Phaser.Scale.CENTER_BOTH,
@@ -19,7 +19,7 @@ window.onload = function () {
       height: 1640
     },
 
-    scene: [preloadGame, home, playGame, endLevel]
+    scene: [preloadGame, home, selectLevel, playGame, endLevel]
   }
   game = new Phaser.Game(gameConfig);
   window.focus();
@@ -374,7 +374,7 @@ class playGame extends Phaser.Scene {
     this.shuffle(this.keyCoordinates)
     // console.log('shuffle keys')
     for (var i = 0; i < this.keys.length; i++) {
-     // this.keys[i].setPosition(this.keyCoordinates[i].x, this.keyCoordinates[i].y)
+      // this.keys[i].setPosition(this.keyCoordinates[i].x, this.keyCoordinates[i].y)
       var tween = this.tweens.add({
         targets: this.keys[i],
         x: this.keyCoordinates[i].x,
