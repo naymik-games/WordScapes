@@ -10,7 +10,7 @@ let arrayWords = [];
 window.onload = function () {
   let gameConfig = {
     type: Phaser.AUTO,
-    backgroundColor: 0x05adb0,
+    
     scale: {
       mode: Phaser.Scale.FIT,
       autoCenter: Phaser.Scale.CENTER_BOTH,
@@ -84,7 +84,7 @@ class playGame extends Phaser.Scene {
     //  console.log(base)
     var wordCombos = findWords(base);
     var finalCombo = wordCombos.filter(this.filterList)
-    console.log(finalCombo)
+    // console.log(finalCombo)
     var finalCombo1 = this.shuffle(finalCombo)
     // console.log(finalCombo1)
     this.words = finalCombo1.slice(0, 8);
@@ -129,7 +129,7 @@ class playGame extends Phaser.Scene {
     this.input.on("gameobjectover", this.overDot, this);
 
     var tempL = onLevel + 1;
-    this.levelText = this.add.bitmapText(200, 75, 'clarendon', 'Level ' + tempL, 120).setOrigin(0, .5).setTint(0xffffff).setMaxWidth(700);
+    this.levelText = this.add.bitmapText(155, 75, 'clarendon', 'Level ' + tempL, 120).setOrigin(0, .5).setTint(0xffffff).setMaxWidth(700);
 
 
     this.starBack = this.add.image(640, 75, 'platform').setOrigin(0, .5).setTint(0x000000).setAlpha(.7);
@@ -305,7 +305,8 @@ class playGame extends Phaser.Scene {
             onLevel++;
             gameData.level = onLevel;
             localStorage.setItem('WSdata', JSON.stringify(gameData));
-            this.scene.start("PlayGame");
+            this.scene.pause()
+            this.scene.launch("endLevel");
 
           }
         }
@@ -373,7 +374,7 @@ class playGame extends Phaser.Scene {
     this.shuffle(this.keyCoordinates)
     // console.log('shuffle keys')
     for (var i = 0; i < this.keys.length; i++) {
-      // this.keys[i].setPosition(this.keyCoordinates[i].x, this.keyCoordinates[i].y)
+     // this.keys[i].setPosition(this.keyCoordinates[i].x, this.keyCoordinates[i].y)
       var tween = this.tweens.add({
         targets: this.keys[i],
         x: this.keyCoordinates[i].x,
