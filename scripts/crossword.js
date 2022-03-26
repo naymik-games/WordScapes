@@ -225,7 +225,7 @@ function AddWordToBoard() {
 
   var spliced = wordBank.splice(curIndex, 1);
   wordsActive.push(spliced[0]);
-  //console.log(wordsActive)
+  // console.log(wordsActive)
   var pushIndex = wordsActive.length - 1,
     rand = Math.random(),
     matchArr = wordsActive[pushIndex].successfulMatches,
@@ -242,13 +242,14 @@ function AddWordToBoard() {
 
     if (matchData.dir === 0) {
       xIndex += i;
+
       //board[xIndex][yIndex] = { letter: wordsActive[pushIndex].char[i], word: wordsActive[pushIndex].char.join('') };
-      board[xIndex][yIndex] = { letter: wordsActive[pushIndex].char[i], word: wordsActive[pushIndex].string };
+      board[xIndex][yIndex] = { letter: wordsActive[pushIndex].char[i], word: wordsActive[pushIndex].string, dir: wordsActive[pushIndex].dir };
     }
     else {
       yIndex += i;
       //board[xIndex][yIndex] = { letter: wordsActive[pushIndex].char[i], word: wordsActive[pushIndex].char.join('') };
-      board[xIndex][yIndex] = { letter: wordsActive[pushIndex].char[i], word: wordsActive[pushIndex].string };
+      board[xIndex][yIndex] = { letter: wordsActive[pushIndex].char[i], word: wordsActive[pushIndex].string, dir: wordsActive[pushIndex].dir };
     }
 
     Bounds.Update(xIndex, yIndex);
@@ -260,6 +261,7 @@ function AddWordToBoard() {
 
 
 function BoardToArray(blank) {
+  //console.log(board)
   var newBoard = []
   for (var i = Bounds.top - 1; i < Bounds.bottom + 2; i++) {
     var temp = []

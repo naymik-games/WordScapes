@@ -84,7 +84,7 @@ class playGame extends Phaser.Scene {
     //  console.log(base)
     var wordCombos = findWords(base);
     var finalCombo = wordCombos.filter(this.filterList)
-    // console.log(finalCombo)
+    console.log(finalCombo)
     var finalCombo1 = this.shuffle(finalCombo)
     // console.log(finalCombo1)
     this.words = finalCombo1.slice(0, 8);
@@ -373,7 +373,7 @@ class playGame extends Phaser.Scene {
     this.shuffle(this.keyCoordinates)
     // console.log('shuffle keys')
     for (var i = 0; i < this.keys.length; i++) {
-     // this.keys[i].setPosition(this.keyCoordinates[i].x, this.keyCoordinates[i].y)
+      // this.keys[i].setPosition(this.keyCoordinates[i].x, this.keyCoordinates[i].y)
       var tween = this.tweens.add({
         targets: this.keys[i],
         x: this.keyCoordinates[i].x,
