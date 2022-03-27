@@ -282,7 +282,7 @@ class playGame extends Phaser.Scene {
 
       this.revealAnswer(answer)
       this.foundWords.push(answer)
-
+      this.guess = '';
       //animate guess word
       this.tweens.add({
         targets: this.guessText,
@@ -294,7 +294,7 @@ class playGame extends Phaser.Scene {
         duration: 1000,
         callbackScope: this,
         onComplete: function () {
-          this.guess = '';
+          
           this.guessText.setText('');
           /* if (this.puzzleFound == this.words.length) {
             alert('completed!')
@@ -311,6 +311,7 @@ class playGame extends Phaser.Scene {
       //found bonus
       this.foundWords.push(answer)
       this.bonusFound++;
+      this.guess = '';
       this.bonusText.setText(this.bonusFound)
       //animate guess word
       this.tweens.add({
@@ -323,7 +324,7 @@ class playGame extends Phaser.Scene {
         duration: 1000,
         callbackScope: this,
         onComplete: function () {
-          this.guess = '';
+          
           this.guessText.setText('');
         }
       });

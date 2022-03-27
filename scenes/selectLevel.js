@@ -13,6 +13,7 @@ class selectLevel extends Phaser.Scene {
     back.displayWidth = game.config.width;
     back.displayHeight = game.config.height;
     this.startGroup = onBook;
+var pageTitle = this.add.bitmapText(game.config.width / 2, 100, 'clarendon', 'WorkScapes', 120).setTint(0xffffff).setOrigin(.5).setMaxWidth(500);
 
 
     this.showGroup(this.startGroup);
@@ -71,9 +72,9 @@ class selectLevel extends Phaser.Scene {
     }
     var groupBox = this.add.container().setDepth(2);
     var tempGroup = groupNum + 1;
-    var groupTitle = this.add.bitmapText(game.config.width / 2, 200, 'clarendon', groups[groupNum].title, 60).setTint(0xbf5846).setOrigin(.5).setMaxWidth(500);
+    var groupTitle = this.add.bitmapText(game.config.width / 2, 200, 'clarendon', groups[groupNum].title, 80).setTint(0xfafafa).setOrigin(.5).setMaxWidth(500);
     groupBox.add(groupTitle);
-    var groupText = this.add.bitmapText(game.config.width / 2, 1400, 'clarendon', tempGroup + '/' + groups.length, 60).setTint(0xbf5846).setOrigin(.5).setMaxWidth(500);
+    var groupText = this.add.bitmapText(game.config.width / 2, 1400, 'clarendon', tempGroup + '/' + groups.length, 60).setTint(0xfafafa).setOrigin(.5).setMaxWidth(500);
     groupBox.add(groupText);
     //	var levelNum = groupNum + (groups[groupNum].puzzleCount -1);
 
