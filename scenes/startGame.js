@@ -11,6 +11,7 @@ class home extends Phaser.Scene {
       gameData = defaultData;
     }
     onLevel = gameData.level;
+    onBook = gameData.book
     var tempL = onLevel + 1;
 
     var back = this.add.image(0, 0, 'home').setOrigin(0)

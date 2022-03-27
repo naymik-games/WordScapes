@@ -79,7 +79,9 @@ class playGame extends Phaser.Scene {
     this.selected = null;
     this.revealLetter = false;
     this.revealWord = false;
-
+    if(onLevel > 71){
+      var count = 10
+    } 
     var base = sourceWords[onLevel]
     //  console.log(base)
     var wordCombos = findWords(base);
@@ -115,8 +117,8 @@ class playGame extends Phaser.Scene {
 
 
     this.graphics = this.add.graphics({ lineStyle: { width: 4, color: 0xffffff } });
-    this.graphicsLine = this.add.graphics({ lineStyle: { width: 20, color: 0xff0000 } });
-    this.graphicsCircle = this.add.graphics({ lineStyle: { width: 20, color: 0xff0000 }, fillStyle: { color: 0xff0000 } });
+    this.graphicsLine = this.add.graphics({ lineStyle: { width: 20, color: 0x00ff00 } });
+    this.graphicsCircle = this.add.graphics({ lineStyle: { width: 20, color: 0x00ff00 }, fillStyle: { color: 0x00ff00 } });
     this.line = new Phaser.Geom.Line(game.config.width / 2 - 200, 1050, game.config.width / 2 + 200, 1050);
     this.graphics.strokeLineShape(this.line);
     //graphics.strokeLineShape(line); // line: {x1, y1, x2, y2}
@@ -130,7 +132,8 @@ class playGame extends Phaser.Scene {
 
     var tempL = onLevel + 1;
     this.levelText = this.add.bitmapText(155, 75, 'clarendon', 'Level ' + tempL, 120).setOrigin(0, .5).setTint(0xffffff).setMaxWidth(700);
-
+    this.backText = this.add.bitmapText(25, 75, 'clarendon', '[H]', 60).setOrigin(0, .5).setTint(0xffffff).setMaxWidth(700).setInteractive();
+    this.backText.type = 'home'
 
     this.starBack = this.add.image(640, 75, 'platform').setOrigin(0, .5).setTint(0x000000).setAlpha(.7);
     this.starBack.displayWidth = 250
@@ -158,6 +161,11 @@ class playGame extends Phaser.Scene {
     //console.log(tile)
     if (tile.type == 'shuffle') {
       this.shuffleKeys()
+      return
+    }
+    if (tile.type == 'home') {
+      this.scene.stop();
+      this.scene.start('home');
       return
     }
     if (tile.type == 'letterClue') {
@@ -406,6 +414,7 @@ class playGame extends Phaser.Scene {
 
   }
   createBoard(board) {
+   // console.log(board)
     for (var i = 0; i < board.length; i++) {
       for (var j = 0; j < board[0].length; j++) {
         if (board[i][j] != null) {
