@@ -7,8 +7,9 @@ class selectLevel extends Phaser.Scene {
   }
   create() {
     this.cameras.main.setBackgroundColor(0xf7eac6);
-    var rand = Phaser.Math.Between(0, 11)
-    var back = this.add.image(0, 0, backs[rand]).setOrigin(0)
+    //var rand = Phaser.Math.Between(0, 11)
+    //var back = this.add.image(0, 0, backs[rand]).setOrigin(0)
+    var back = this.add.image(0, 0, 'home').setOrigin(0)
     back.displayWidth = game.config.width;
     back.displayHeight = game.config.height;
     this.startGroup = onBook;
@@ -56,7 +57,7 @@ class selectLevel extends Phaser.Scene {
       if (obj[0].level > -1) {
         onLevel = obj[0].level;
         onBook = this.startGroup;
-        this.scene. stop()
+        this.scene.stop()
         this.scene.start('PlayGame');
       }
 
@@ -95,7 +96,7 @@ class selectLevel extends Phaser.Scene {
       }
 
       var tempLevel = levelNum + 1;
-      var statusText = this.add.bitmapText(xpos + 112.5, ypos - 60, 'clarendon', tempLevel, 70).setOrigin(.5).setTint(0x298191);
+      var statusText = this.add.bitmapText(xpos + 112.5, ypos - 60, 'clarendon', tempLevel, 90).setOrigin(.5).setTint(0x000000);
       var levelTitle = this.add.image(xpos, ypos, 'select_icons', 1).setOrigin(0, .5).setScale(.75);
       levelTitle.level = levelNum;
 

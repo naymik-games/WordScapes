@@ -7,6 +7,7 @@ class preloadGame extends Phaser.Scene {
 
     this.load.bitmapFont("clarendon", "assets/fonts/lato.png", "assets/fonts/lato.xml");
     this.load.image("star", "assets/sprites/star.png");
+    this.load.image("back_00", "assets/sprites/backs/back_00.png");
     this.load.image("back_01", "assets/sprites/backs/back_01.png");
     this.load.image("back_02", "assets/sprites/backs/back_02.png");
     this.load.image("back_03", "assets/sprites/backs/back_03.png");
@@ -19,6 +20,11 @@ class preloadGame extends Phaser.Scene {
     this.load.image("back_10", "assets/sprites/backs/back_10.png");
     this.load.image("back_11", "assets/sprites/backs/back_11.png");
     this.load.image("back_12", "assets/sprites/backs/back_12.png");
+    this.load.image("back_13", "assets/sprites/backs/back_13.png");
+    this.load.image("back_14", "assets/sprites/backs/back_14.png");
+    this.load.image("back_15", "assets/sprites/backs/back_15.png");
+    this.load.image("back_16", "assets/sprites/backs/back_16.png");
+    this.load.image("home", "assets/sprites/home.png");
     this.load.spritesheet("select_icons", "assets/sprites/select_icons.png", {
       frameWidth: 300,
       frameHeight: 300
