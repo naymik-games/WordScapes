@@ -14,7 +14,7 @@ class endLevel extends Phaser.Scene {
       this.scene.start('PlayGame')
     }, this)
     this.selectLevelText = this.add.bitmapText(450, 1200, 'clarendon', 'Levels', 100).setOrigin(.5).setTint(0xffffff).setMaxWidth(700).setInteractive();
-    this.selectLevelText.on('pointerdown', function () {
+    this.selectLevelText.on('pointerup', function () {
       this.scene.stop()
       this.scene.start('selectLevel')
     }, this)

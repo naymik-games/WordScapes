@@ -15,7 +15,7 @@ class selectLevel extends Phaser.Scene {
 
 
     this.showGroup(this.startGroup);
-    this.return = this.add.image(game.config.width / 2, 1550, 'menu_icons', 5).setScale(1.5).setInteractive().setTint(0xc76210);
+    this.return = this.add.image(game.config.width / 2, 1550, 'pixel').setScale(1.5).setInteractive().setTint(0xc76210);
 
     //this.backText = this.add.bitmapText(game.config.width / 2, 1500, 'clarendon', '< back', 60).setOrigin(.5, .5).setTint(0xd8a603).setInteractive();
     this.return.level = -2;
@@ -56,7 +56,7 @@ class selectLevel extends Phaser.Scene {
       if (obj[0].level > -1) {
         onLevel = obj[0].level;
         onBook = this.startGroup;
-
+        this.scene. stop()
         this.scene.start('PlayGame');
       }
 
