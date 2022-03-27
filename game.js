@@ -114,11 +114,11 @@ class playGame extends Phaser.Scene {
 
 
 
-    var graphics = this.add.graphics({ lineStyle: { width: 4, color: 0xffffff } });
+    this.graphics = this.add.graphics({ lineStyle: { width: 4, color: 0xffffff } });
     this.graphicsLine = this.add.graphics({ lineStyle: { width: 20, color: 0xff0000 } });
     this.graphicsCircle = this.add.graphics({ lineStyle: { width: 20, color: 0xff0000 }, fillStyle: { color: 0xff0000 } });
     this.line = new Phaser.Geom.Line(game.config.width / 2 - 200, 1050, game.config.width / 2 + 200, 1050);
-    graphics.strokeLineShape(this.line);
+    this.graphics.strokeLineShape(this.line);
     //graphics.strokeLineShape(line); // line: {x1, y1, x2, y2}
     //graphics.lineBetween(x1, y1, x2, y2);
     //graphics.lineTo(x, y);
@@ -300,13 +300,7 @@ class playGame extends Phaser.Scene {
             alert('completed!')
           } */
           if (this.puzzleFound == this.words.length) {
-            bonusEarned += this.bonusFound
-            gameData.coins = bonusEarned
-            onLevel++;
-            gameData.level = onLevel;
-            localStorage.setItem('WSdata', JSON.stringify(gameData));
-            this.scene.pause()
-            this.scene.launch("endLevel");
+            this.levelEnd()
 
           }
         }
@@ -339,6 +333,32 @@ class playGame extends Phaser.Scene {
       this.guess = '';
       this.guessText.setText(this.guess);
     }
+  }
+  levelEnd(){
+    var tween = this.tweens.add({
+      targets: [this.shuffleButton,this.letterButton, this.wordButton],
+      alpha: 0,
+      duration: 200,
+      delay: 200,
+      callbackScope: this,
+      onComplete: function(){
+        this.graphics.clear()
+        bonusEarned += this.bonusFound
+        gameData.coins = bonusEarned
+        onLevel++;
+        gameData.level = onLevel;
+        localStorage.setItem('WSdata', JSON.stringify(gameData));
+        this.scene.pause()
+        this.scene.launch("endLevel");
+      }
+    })
+    var tween = this.tweens.add({
+      targets: this.keys,
+      alpha: 0,
+      duration: 200,
+      delay: 200,
+    });
+    
   }
   revealAnswer(answer) {
     for (var i = 0; i < board.length; i++) {
