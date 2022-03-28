@@ -146,6 +146,8 @@ class playGame extends Phaser.Scene {
 
     this.star = this.add.image(100, 1550, 'star').setScale(.3)
     this.guessText = this.add.bitmapText(450, 990, 'clarendon', '', 130).setOrigin(.5).setTint(0xffffff).setMaxWidth(700);
+    this.guessFakeText = this.add.bitmapText(450, 990, 'clarendon', '', 130).setOrigin(.5).setTint(0xffffff).setMaxWidth(700);
+
     this.bonusText = this.add.bitmapText(100, 1555, 'clarendon', 0, 60).setOrigin(.5).setTint(0x000000).setMaxWidth(700);
     this.shuffleButton = this.add.image(75, 1125, 'tile-icons', 0).setInteractive()
     this.shuffleButton.type = 'shuffle'
@@ -199,8 +201,7 @@ class playGame extends Phaser.Scene {
       }
     }
     if (tile.type == 'key') {
-      this.guessText.setPosition(450, 990);
-      this.guessText.setAlpha(1);
+      
 
       this.guess += tile.letter
       tile.setAlpha(.5)
@@ -266,6 +267,8 @@ class playGame extends Phaser.Scene {
     this.scoreList = []
   }
   checkAnswer(answer) {
+    this.guessFakeText.setPosition(450, 990);
+    this.guessFakeText.setAlpha(1);
     if (groups[onBook].allow3) {
       var min = 3
     } else {
@@ -294,10 +297,12 @@ class playGame extends Phaser.Scene {
 
       this.revealAnswer(answer)
       this.foundWords.push(answer)
+      this.guessFakeText.setText(this.guess)
       this.guess = '';
+      this.guessText.setText('');
       //animate guess word
       this.tweens.add({
-        targets: this.guessText,
+        targets: this.guessFakeText,
         y: 0,
         x: game.config.width / 2,
         alpha: { from: 1, to: .1 },
@@ -307,7 +312,7 @@ class playGame extends Phaser.Scene {
         callbackScope: this,
         onComplete: function () {
 
-          this.guessText.setText('');
+          this.guessFakeText.setText('');
           /* if (this.puzzleFound == this.words.length) {
             alert('completed!')
           } */
@@ -323,11 +328,14 @@ class playGame extends Phaser.Scene {
       //found bonus
       this.foundWords.push(answer)
       this.bonusFound++;
+      
+      this.guessFakeText.setText(this.guess)
       this.guess = '';
       this.bonusText.setText(this.bonusFound)
+      this.guessText.setText('');
       //animate guess word
       this.tweens.add({
-        targets: this.guessText,
+        targets: this.guessFakeText,
         y: 1600,
         x: 25,
         alpha: { from: 1, to: .1 },
@@ -337,7 +345,7 @@ class playGame extends Phaser.Scene {
         callbackScope: this,
         onComplete: function () {
 
-          this.guessText.setText('');
+          this.guessFakeText.setText('');
         }
       });
     } else {
