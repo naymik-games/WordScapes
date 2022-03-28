@@ -3,6 +3,7 @@
 //---------------------------------//
 
 var board, wordArr, wordBank, wordsActive, mode;
+var tempa = []
 
 var Bounds = {
   top: 0, right: 0, bottom: 0, left: 0,
@@ -100,7 +101,7 @@ function PrepareBoard() {
       }
     }
   }
-  //console.log(JSON.stringify(wordBank))  
+
 }
 
 
@@ -225,13 +226,14 @@ function AddWordToBoard() {
 
   var spliced = wordBank.splice(curIndex, 1);
   wordsActive.push(spliced[0]);
-  // console.log(wordsActive)
+
   var pushIndex = wordsActive.length - 1,
     rand = Math.random(),
     matchArr = wordsActive[pushIndex].successfulMatches,
     matchIndex = Math.floor(rand * matchArr.length),
     matchData = matchArr[matchIndex];
-
+  //console.log(matchData)
+  tempa.push(matchData)
   wordsActive[pushIndex].x = matchData.x;
   wordsActive[pushIndex].y = matchData.y;
   wordsActive[pushIndex].dir = matchData.dir;
@@ -242,14 +244,16 @@ function AddWordToBoard() {
 
     if (matchData.dir === 0) {
       xIndex += i;
-
+      //tempa.push(wordsActive[pushIndex].char[i])
       //board[xIndex][yIndex] = { letter: wordsActive[pushIndex].char[i], word: wordsActive[pushIndex].char.join('') };
-      board[xIndex][yIndex] = { letter: wordsActive[pushIndex].char[i], word: wordsActive[pushIndex].string, dir: wordsActive[pushIndex].dir };
+      board[xIndex][yIndex] = { wa: tempa, x: xIndex, y: yIndex, letter: wordsActive[pushIndex].char[i], word: wordsActive[pushIndex].string, dir: wordsActive[pushIndex].dir };
+
     }
     else {
       yIndex += i;
+      //tempa.push(wordsActive[pushIndex].char[i])
       //board[xIndex][yIndex] = { letter: wordsActive[pushIndex].char[i], word: wordsActive[pushIndex].char.join('') };
-      board[xIndex][yIndex] = { letter: wordsActive[pushIndex].char[i], word: wordsActive[pushIndex].string, dir: wordsActive[pushIndex].dir };
+      board[xIndex][yIndex] = { wa: tempa, x: xIndex, y: yIndex, letter: wordsActive[pushIndex].char[i], word: wordsActive[pushIndex].string, dir: wordsActive[pushIndex].dir };
     }
 
     Bounds.Update(xIndex, yIndex);
@@ -261,13 +265,14 @@ function AddWordToBoard() {
 
 
 function BoardToArray(blank) {
+  //console.log(wordsActive)
+  //console.log(tempa)
   //console.log(board)
   var newBoard = []
   for (var i = Bounds.top - 1; i < Bounds.bottom + 2; i++) {
     var temp = []
 
     for (var j = Bounds.left - 1; j < Bounds.right + 2; j++) {
-
       temp.push(board[j][i])
     }
     newBoard.push(temp)
@@ -292,5 +297,6 @@ function WordObj(stringValue) {
   this.totalMatches = 0;
   this.effectiveMatches = 0;
   this.successfulMatches = [];
+  this.answerArray = [];
 }
 

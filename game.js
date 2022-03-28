@@ -3,6 +3,7 @@ let gameOptions = {}
 let wordy;
 let bonusTotalCount = 0;
 let arrayWords = [];
+const shuffle = str => [...str].sort(() => Math.random() - .5).join('');
 
 
 
@@ -79,9 +80,9 @@ class playGame extends Phaser.Scene {
     this.selected = null;
     this.revealLetter = false;
     this.revealWord = false;
-    if(onLevel > 71){
+    if (onLevel > 71) {
       var count = 10
-    } 
+    }
     var base = sourceWords[onLevel]
     //  console.log(base)
     var wordCombos = findWords(base);
@@ -89,7 +90,8 @@ class playGame extends Phaser.Scene {
     // console.log(finalCombo)
     var finalCombo1 = this.shuffle(finalCombo)
     // console.log(finalCombo1)
-    this.words = finalCombo1.slice(0, 8);
+    //console.log(finalCombo1)
+    this.words = finalCombo1.slice(0, groups[onBook].wordMax);
     var board = Create(this.words);
     // console.log(this.words);
 
@@ -187,14 +189,11 @@ class playGame extends Phaser.Scene {
         this.revealAnswer(tile.word)
         this.puzzleFound++;
         this.foundWords.push(tile.word)
-        if (this.puzzleFound == this.words.length) {
-          bonusEarned += this.bonusFound
-          onLevel++;
-          this.scene.start("PlayGame");
-
-        }
         this.revealWord = false;
         this.wordButton.setScale(1).clearTint()
+        if (this.puzzleFound == this.words.length) {
+          this.levelEnd()
+        }
       } else {
         return
       }
@@ -252,7 +251,7 @@ class playGame extends Phaser.Scene {
   }
   upDot(pointer, tile) {
     if (this.selected == null) { return }
-    console.log(this.guess)
+    //console.log(this.guess)
     this.selected = null
     this.graphicsLine.clear()
     this.graphicsCircle.clear()
@@ -267,7 +266,12 @@ class playGame extends Phaser.Scene {
     this.scoreList = []
   }
   checkAnswer(answer) {
-    if (answer.length < 3) {
+    if (groups[onBook].allow3) {
+      var min = 3
+    } else {
+      var min = 4
+    }
+    if (answer.length < min) {
       // not long enough
       this.cameras.main.shake(200, 0.02);
       this.guess = '';
@@ -285,7 +289,7 @@ class playGame extends Phaser.Scene {
       this.guessText.setText(this.guess);
     } else if (this.words.indexOf(answer) > -1) {
       //found puzzle word
-      console.log('found it!')
+      // console.log('found it!')
       this.puzzleFound++;
 
       this.revealAnswer(answer)
@@ -302,7 +306,7 @@ class playGame extends Phaser.Scene {
         duration: 1000,
         callbackScope: this,
         onComplete: function () {
-          
+
           this.guessText.setText('');
           /* if (this.puzzleFound == this.words.length) {
             alert('completed!')
@@ -332,7 +336,7 @@ class playGame extends Phaser.Scene {
         duration: 1000,
         callbackScope: this,
         onComplete: function () {
-          
+
           this.guessText.setText('');
         }
       });
@@ -343,19 +347,25 @@ class playGame extends Phaser.Scene {
       this.guessText.setText(this.guess);
     }
   }
-  levelEnd(){
+  levelEnd() {
     var tween = this.tweens.add({
-      targets: [this.shuffleButton,this.letterButton, this.wordButton],
+      targets: [this.shuffleButton, this.letterButton, this.wordButton],
       alpha: 0,
       duration: 200,
       delay: 200,
       callbackScope: this,
-      onComplete: function(){
+      onComplete: function () {
         this.graphics.clear()
         bonusEarned += this.bonusFound
         gameData.coins = bonusEarned
         onLevel++;
+        var tempG = (onLevel + 1) % 12
+        if (tempG == 1) {
+          onBook++;
+        }
+
         gameData.level = onLevel;
+        gameData.book = onBook;
         localStorage.setItem('WSdata', JSON.stringify(gameData));
         this.scene.pause()
         this.scene.launch("endLevel");
@@ -367,7 +377,7 @@ class playGame extends Phaser.Scene {
       duration: 200,
       delay: 200,
     });
-    
+
   }
   revealAnswer(answer) {
     for (var i = 0; i < board.length; i++) {
@@ -381,18 +391,24 @@ class playGame extends Phaser.Scene {
     }
   }
   filterList(item) {
-    return item.length > 2 && item.length < 7;
+    if (groups[onBook].allow3) {
+      return item.length > 2;
+    } else {
+      return item.length > 3;
+    }
+
   }
   createKeys(totalPoints, base) {
     this.keyCoordinates = []
     this.keys = []
+    var base1 = shuffle(base);
     for (var i = 1; i <= totalPoints; i++) {
       var p = this.drawPoint(200, i, totalPoints);
       this.keyCoordinates.push(p)
-      var ind = this.tileLetters.indexOf(base[i - 1])
+      var ind = this.tileLetters.indexOf(base1[i - 1])
       var tile = this.add.image(p.x, p.y, 'tiles', ind).setScale(1.5).setInteractive()
       tile.inedex = ind
-      tile.letter = base[i - 1]
+      tile.letter = base1[i - 1]
       tile.type = 'key'
       this.keys.push(tile)
     }
@@ -414,7 +430,7 @@ class playGame extends Phaser.Scene {
 
   }
   createBoard(board) {
-   // console.log(board)
+    // console.log(board)
     for (var i = 0; i < board.length; i++) {
       for (var j = 0; j < board[0].length; j++) {
         if (board[i][j] != null) {
