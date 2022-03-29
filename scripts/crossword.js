@@ -2,7 +2,7 @@
 //   GLOBAL VARIABLES              //
 //---------------------------------//
 
-var board, wordArr, wordBank, wordsActive, mode;
+var boardFull, wordArr, wordBank, wordsActive, mode;
 var tempa = []
 
 var Bounds = {
@@ -39,7 +39,7 @@ function Create(words) {
     CleanVars();
     isSuccess = PopulateBoard();
   }
-  //console.log(board)
+  //console.log(boardFull)
   // document.getElementById("crossword").innerHTML = 
   //  (isSuccess) ? BoardToHtml(" ") : "Failed to find crossword." ;
 
@@ -64,12 +64,12 @@ function CleanVars() {
   Bounds.Clean();
   wordBank = [];
   wordsActive = [];
-  board = [];
+  boardFull = [];
 
   for (var i = 0; i < 24; i++) {
-    board.push([]);
+    boardFull.push([]);
     for (var j = 0; j < 24; j++) {
-      board[i].push(null);
+      boardFull[i].push(null);
     }
   }
 }
@@ -155,26 +155,26 @@ function AddWordToBoard() {
                   if (curCross.dir === 0) {
                     var xIndex = curCross.x + m;
 
-                    if (xIndex < 0 || xIndex > board.length) {
+                    if (xIndex < 0 || xIndex > boardFull.length) {
                       isMatch = false;
                       break;
                     }
 
-                    crossVal.push(board[xIndex][curCross.y]);
-                    crossVal.push(board[xIndex][curCross.y + 1]);
-                    crossVal.push(board[xIndex][curCross.y - 1]);
+                    crossVal.push(boardFull[xIndex][curCross.y]);
+                    crossVal.push(boardFull[xIndex][curCross.y + 1]);
+                    crossVal.push(boardFull[xIndex][curCross.y - 1]);
                   }
                   else {
                     var yIndex = curCross.y + m;
 
-                    if (yIndex < 0 || yIndex > board[curCross.x].length) {
+                    if (yIndex < 0 || yIndex > boardFull[curCross.x].length) {
                       isMatch = false;
                       break;
                     }
 
-                    crossVal.push(board[curCross.x][yIndex]);
-                    crossVal.push(board[curCross.x + 1][yIndex]);
-                    crossVal.push(board[curCross.x - 1][yIndex]);
+                    crossVal.push(boardFull[curCross.x][yIndex]);
+                    crossVal.push(boardFull[curCross.x + 1][yIndex]);
+                    crossVal.push(boardFull[curCross.x - 1][yIndex]);
                   }
 
                   if (m > -1 && m < lenM - 1) {
@@ -245,15 +245,15 @@ function AddWordToBoard() {
     if (matchData.dir === 0) {
       xIndex += i;
       //tempa.push(wordsActive[pushIndex].char[i])
-      //board[xIndex][yIndex] = { letter: wordsActive[pushIndex].char[i], word: wordsActive[pushIndex].char.join('') };
-      board[xIndex][yIndex] = { wa: tempa, x: xIndex, y: yIndex, letter: wordsActive[pushIndex].char[i], word: wordsActive[pushIndex].string, dir: wordsActive[pushIndex].dir };
+      //boardFull[xIndex][yIndex] = { letter: wordsActive[pushIndex].char[i], word: wordsActive[pushIndex].char.join('') };
+      boardFull[xIndex][yIndex] = { wa: tempa, x: xIndex, y: yIndex, letter: wordsActive[pushIndex].char[i], word: wordsActive[pushIndex].string, dir: wordsActive[pushIndex].dir };
 
     }
     else {
       yIndex += i;
       //tempa.push(wordsActive[pushIndex].char[i])
-      //board[xIndex][yIndex] = { letter: wordsActive[pushIndex].char[i], word: wordsActive[pushIndex].char.join('') };
-      board[xIndex][yIndex] = { wa: tempa, x: xIndex, y: yIndex, letter: wordsActive[pushIndex].char[i], word: wordsActive[pushIndex].string, dir: wordsActive[pushIndex].dir };
+      //boardFull[xIndex][yIndex] = { letter: wordsActive[pushIndex].char[i], word: wordsActive[pushIndex].char.join('') };
+      boardFull[xIndex][yIndex] = { wa: tempa, x: xIndex, y: yIndex, letter: wordsActive[pushIndex].char[i], word: wordsActive[pushIndex].string, dir: wordsActive[pushIndex].dir };
     }
 
     Bounds.Update(xIndex, yIndex);
@@ -266,14 +266,14 @@ function AddWordToBoard() {
 
 function BoardToArray(blank) {
   //console.log(wordsActive)
-  //console.log(tempa)
-  //console.log(board)
+  // console.log(boardFull)
+  // console.log(Bounds.top)
   var newBoard = []
   for (var i = Bounds.top - 1; i < Bounds.bottom + 2; i++) {
     var temp = []
 
     for (var j = Bounds.left - 1; j < Bounds.right + 2; j++) {
-      temp.push(board[j][i])
+      temp.push(boardFull[j][i])
     }
     newBoard.push(temp)
 

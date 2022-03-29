@@ -3,6 +3,7 @@ let gameOptions = {}
 let wordy;
 let bonusTotalCount = 0;
 let arrayWords = [];
+
 const shuffle = str => [...str].sort(() => Math.random() - .5).join('');
 
 
@@ -201,7 +202,7 @@ class playGame extends Phaser.Scene {
       }
     }
     if (tile.type == 'key') {
-      
+
 
       this.guess += tile.letter
       tile.setAlpha(.5)
@@ -328,7 +329,7 @@ class playGame extends Phaser.Scene {
       //found bonus
       this.foundWords.push(answer)
       this.bonusFound++;
-      
+
       this.guessFakeText.setText(this.guess)
       this.guess = '';
       this.bonusText.setText(this.bonusFound)
@@ -388,11 +389,24 @@ class playGame extends Phaser.Scene {
 
   }
   revealAnswer(answer) {
-    for (var i = 0; i < board.length; i++) {
-      for (var j = 0; j < board[0].length; j++) {
-        if (board[i][j] != null) {
-          if (board[i][j].tile.word == answer) {
-            board[i][j].tile.setFrame(board[i][j].tile.index)
+    var coo = this.patternSearch(this.grid, answer)
+    //console.log(coo)
+    for (var i = 0; i < answer.length; i++) {
+      var letter = coo[i]
+      this.board[letter.y][letter.x].tile.setFrame(this.board[letter.y][letter.x].tile.index);
+    }
+
+
+
+  }
+  revealAnswer_(answer) {
+    console.log(this.board)
+    for (var i = 0; i < this.board.length; i++) {
+      for (var j = 0; j < this.board[0].length; j++) {
+        if (this.board[i][j] != null) {
+          if (this.board[i][j].tile.word == answer) {
+            console.log('y ' + i + ' x ' + j)
+            this.board[i][j].tile.setFrame(this.board[i][j].tile.index)
           }
         }
       }
@@ -438,8 +452,10 @@ class playGame extends Phaser.Scene {
 
   }
   createBoard(board) {
-    // console.log(board)
+    //console.log(board)
+    this.grid = []
     for (var i = 0; i < board.length; i++) {
+      var gridT = []
       for (var j = 0; j < board[0].length; j++) {
         if (board[i][j] != null) {
           var xpos = 25 + j * this.blockSize
@@ -449,19 +465,115 @@ class playGame extends Phaser.Scene {
           tileAnswer.displayHeight = this.blockSize
           tileAnswer.setPosition(xpos, ypos)
           tileAnswer.word = board[i][j].word
+          tileAnswer.direction = board[i][j].dir
           var ind = this.tileLetters.indexOf(board[i][j].letter)
           tileAnswer.index = ind
           tileAnswer.setInteractive()
           tileAnswer.type = 'answer'
           board[i][j].tile = tileAnswer
-          // tileAnswer.setFrame(ind)
+          gridT.push(board[i][j].letter)
+          //tileAnswer.setFrame(ind)
           //console.log(tileAnswer.word)
+
+        } else {
+          gridT.push('-')
         }
 
 
       }
+      this.grid.push(gridT)
     }
-    //  console.log(board)
+    this.board = board
+    //console.log(this.grid)
+
+    //this.patternSearch(this.grid, this.words[1])
+  }
+  patternSearch(grid, word) {
+    // Consider every point as starting
+    // console.log(word)
+    // point and search given word
+    for (let row = 0; row < grid.length; row++) {
+      for (let col = 0; col < grid[0].length; col++) {
+        var result = this.search2D(grid, row, col, word)
+        if (result) {
+          //console.log(result)
+          return result
+        }
+      }
+    }
+  }
+  search2D(grid, row, col, word, dir) {
+
+    let y = [0, 1];
+
+    let x = [1, 0];
+    for (let dir = 0; dir < 2; dir++) {
+      var coo = []
+      // If first character of word
+      // doesn't match with
+      // given starting point in grid.
+      if (grid[row][col] != word[0])
+        //return false;
+        break;
+      coo.push({ x: col, y: row })
+      //console.log('start ' + col + ',' + row)
+      let len = word.length;
+
+      // Search word in all 8 directions
+      // starting from (row, col)
+      // 
+      // Initialize starting point
+      // for current direction
+      let k, rd = row + y[dir], cd = col + x[dir];
+
+      // First character is already checked,
+      // match remaining characters
+      for (k = 1; k < len; k++) {
+        // If out of bound break
+        if (rd >= grid.length || rd < 0 || cd >= grid[0].length || cd < 0)
+          //return false;
+          break;
+        // If not matched, break
+        if (grid[rd][cd] != word[k])
+          //return false;
+          break;
+        //console.log('next ' + cd + ',' + rd)
+        coo.push({ x: cd, y: rd })
+        // Moving in particular direction
+        rd += y[dir];
+        cd += x[dir];
+      }
+
+      // If all character matched,
+      // then value of must
+      // be equal to length of word
+      if (k == len) {
+        // console.log('dir' + dir)
+        if (dir == 0) {
+          if (grid[row][col - 1] != '-') {
+            //return false;
+            break;
+          }
+          if (grid[row][col + len] != '-') {
+            //return false;
+            break;
+          }
+        } else {
+          if (grid[row - 1][col] != '-') {
+            //return false;
+            break;
+          }
+          if (grid[row + len][col] != '-') {
+            //return false;
+            break;
+          }
+        }
+        //console.log(coo)
+
+        return coo
+      }
+    }
+    //return false;
   }
   drawPoint(r, currentPoint, totalPoints) {
     var point = {}
