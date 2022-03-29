@@ -67,7 +67,7 @@ class playGame extends Phaser.Scene {
 
     this.answerTiles = this.add.group({
       defaultKey: "tiles",
-      defaultFrame: 27,
+      defaultFrame: 26,
       maxSize: 150,
       visible: false,
       active: false
@@ -90,17 +90,36 @@ class playGame extends Phaser.Scene {
     var finalCombo = wordCombos.filter(this.filterList)
     // console.log(finalCombo)
     var finalCombo1 = this.shuffle(finalCombo)
-    // console.log(finalCombo1)
+    console.log(finalCombo1.length)
+    if (finalCombo1.length > groups[onBook].wordMax) {
+
+    }
     //console.log(finalCombo1)
     this.words = finalCombo1.slice(0, groups[onBook].wordMax);
+    //console.log(this.words);
+    this.bonus = null
+    var extraCol = 0
+    if (finalCombo1.length > groups[onBook].wordMax) {
+      this.extra = finalCombo1.slice(groups[onBook].wordMax);
+      if (this.extra.length > 3) {
+        this.extra.sort();
+        //console.log(this.extra)
+        this.bonus = this.extra.pop()
+        console.log(this.bonus)
+        extraCol = 1;
+      }
+
+
+    }
     var board = Create(this.words);
-    // console.log(this.words);
+    //
 
     if (board.length > board[0].length) {
-      this.blockSize = game.config.width / board.length
+      this.blockSize = game.config.width / (board.length + extraCol)
     } else {
-      this.blockSize = game.config.width / board[0].length
+      this.blockSize = game.config.width / (board[0].length + extraCol)
     }
+
     var rand = Phaser.Math.Between(0, backs.length - 1)
     var back = this.add.image(0, 0, backs[rand]).setOrigin(0)
     back.displayWidth = game.config.width;
@@ -112,7 +131,21 @@ class playGame extends Phaser.Scene {
     //console.log(this.blockSize)
     this.createBoard(board);
 
+    if (this.bonus) {
+      this.bonusArray = []
+      for (var b = 0; b < this.bonus.length; b++) {
+        var bonusTile = this.add.image(825, 200 + b * this.blockSize, 'tiles', 27)
+        bonusTile.displayWidth = this.blockSize;
+        bonusTile.displayHeight = this.blockSize;
+        bonusTile.word = this.bonus
+        bonusTile.letter = this.bonus[b]
 
+        var ind = this.tileLetters.indexOf(bonusTile.letter)
+        console.log(ind)
+        bonusTile.index = ind
+        this.bonusArray.push(bonusTile)
+      }
+    }
 
     this.createKeys(base.length, base)
 
@@ -325,13 +358,29 @@ class playGame extends Phaser.Scene {
       });
 
 
+    } else if (answer == this.bonus) {
+      //found bonus word
+      for (var i = 0; i < this.bonusArray.length; i++) {
+        console.log(this.bonusArray[i].ind)
+        this.bonusArray[i].setFrame(this.bonusArray[i].index)
+        var tween = this.tweens.add({
+          targets: this.bonusArray[i],
+          scale: 1.3,
+          yoyo: true,
+          duration: 200,
+          delay: i * 50
+        })
+      }
+      this.bonusFound += this.bonusArray.length;
+      this.bonusText.setText(this.bonusFound)
     } else if (ScrabbleWordList.indexOf(answer) > -1) {
       //found bonus
       this.foundWords.push(answer)
-      this.bonusFound++;
+
 
       this.guessFakeText.setText(this.guess)
       this.guess = '';
+      this.bonusFound++;
       this.bonusText.setText(this.bonusFound)
       this.guessText.setText('');
       //animate guess word
@@ -394,6 +443,13 @@ class playGame extends Phaser.Scene {
     for (var i = 0; i < answer.length; i++) {
       var letter = coo[i]
       this.board[letter.y][letter.x].tile.setFrame(this.board[letter.y][letter.x].tile.index);
+      var tween = this.tweens.add({
+        targets: this.board[letter.y][letter.x].tile,
+        scale: 1.3,
+        yoyo: true,
+        duration: 200,
+        delay: i * 50
+      })
     }
 
 
@@ -484,7 +540,7 @@ class playGame extends Phaser.Scene {
       this.grid.push(gridT)
     }
     this.board = board
-    //console.log(this.grid)
+    console.log(this.grid)
 
     //this.patternSearch(this.grid, this.words[1])
   }
