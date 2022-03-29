@@ -1,6 +1,12 @@
 
 let groups = [
-  { title: 'fun', startNum: 0, wordMax: 8, allow3: true }, { title: 'fun 2', startNum: 12, wordMax: 8, allow3: true }, { title: 'fun 3', startNum: 24, wordMax: 8, allow3: true }, { title: 'fun 4', startNum: 36, wordMax: 8, allow3: true }
+  { title: 'fun', startNum: 0, wordMax: 8, allow3: true },
+  { title: 'fun 2', startNum: 12, wordMax: 8, allow3: true },
+  { title: 'fun 3', startNum: 24, wordMax: 8, allow3: true },
+  { title: 'fun 4', startNum: 36, wordMax: 8, allow3: true },
+  { title: 'fun 5', startNum: 48, wordMax: 8, allow3: true },
+  { title: 'fun 6', startNum: 60, wordMax: 9, allow3: true },
+  { title: 'fun 7', startNum: 72, wordMax: 9, allow3: true }
 ]
 let sourceWords = [
   'act',
@@ -45,19 +51,50 @@ let sourceWords = [
   'nice',
   'lots',
   'math',
-  'yach',
+  'yacht',
   'bawl',
-  'fudg',
+  'fudge',
   'fuel',
   'gape',
   'glad',
   'heap',
-  'intr',
-  'ioni',
+  'intro',
+  'ionic',
 
-  // read
-  //diet
-  // stab
-  // mean
-  //asps
+  'read',
+  'diet',
+  'stab',
+  'mean',
+  'asps',
+  'brace',
+  'carer',
+  'cargo',
+  'farce',
+  'hacker',
+  'late',
+  'demo',
+  //6
+  'jumble',
+  'mantra',
+  'simple',
+  'babysit',
+  'cubicle',
+  'clone',
+  'inhtk',
+  'eoslr',
+  'eskpa',
+  'scuba',
+  //7
+  'adjust',
+  'adopt',
+  'arrange',
+  'defeat',
+  'ethics',
+  'fence',
+  'grade',
+  'inform',
+  'legal',
+  'master',
+  'match',
+  'picture',
 ]
