@@ -4,7 +4,6 @@ let wordy;
 let bonusTotalCount = 0;
 let arrayWords = [];
 
-const shuffle = str => [...str].sort(() => Math.random() - .5).join('');
 
 
 

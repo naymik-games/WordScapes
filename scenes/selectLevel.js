@@ -104,11 +104,20 @@ var pageTitle = this.add.bitmapText(game.config.width / 2, 100, 'clarendon', 'Wo
 
 
 
-      if (levelNum <= onLevel) {
+      if (levelNum < onLevel) {
         //levelTitle.setAlpha(.5)
+        var statusText = this.add.bitmapText(xpos + 112.5, ypos - 60, 'clarendon', tempLevel, 90).setOrigin(.5).setTint(0x000000);
+var wordText = this.add.bitmapText(xpos + 112.5, ypos + 20, 'clarendon', sourceWords[levelNum], 50).setOrigin(.5).setTint(0x000000);
+
         levelTitle.setFrame(0);
         levelTitle.setInteractive();
 
+      } else if(levelNum == onLevel){
+        var statusText = this.add.bitmapText(xpos + 112.5, ypos - 60, 'clarendon', tempLevel, 90).setOrigin(.5).setTint(0x000000);
+var wordText = this.add.bitmapText(xpos + 112.5, ypos + 20, 'clarendon', shuffle(sourceWords[levelNum]), 50).setOrigin(.5).setTint(0x000000);
+
+        levelTitle.setFrame(0);
+        levelTitle.setInteractive();
       } else {
         levelTitle.setFrame(1);
 
@@ -117,6 +126,7 @@ var pageTitle = this.add.bitmapText(game.config.width / 2, 100, 'clarendon', 'Wo
       levelNum++;
       groupBox.add(levelTitle);
       groupBox.add(statusText);
+      groupBox.add(wordText);
     }
 
 
