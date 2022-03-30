@@ -11,7 +11,11 @@ class endLevel extends Phaser.Scene {
     //  32px radius on the corners
 
 
-    var tempL = onLevel + 1;
+    if (gameMode == 'book') {
+      var tempL = onLevel + 1;
+    } else {
+      var tempL = onPuzzle + 1;
+    }
 
     this.nextLevelText = this.add.bitmapText(450, 1200, 'clarendon', 'Level ' + tempL, 100).setOrigin(.5).setTint(0xffffff).setMaxWidth(700).setInteractive().setAlpha(0);
     this.nextLevelText.on('pointerdown', function () {
@@ -38,12 +42,26 @@ class endLevel extends Phaser.Scene {
 
 
     }, this)
-    this.selectLevelText = this.add.bitmapText(450, 1400, 'clarendon', 'Select Level', 80).setOrigin(.5).setTint(0xffffff).setMaxWidth(700).setInteractive().setAlpha(0);
-    this.selectLevelText.on('pointerup', function () {
-      this.scene.stop()
-      this.scene.stop('PlayGame')
-      this.scene.start('selectLevel')
-    }, this)
+
+
+    if (gameMode == 'book') {
+      this.selectLevelText = this.add.bitmapText(450, 1400, 'clarendon', 'Select Level', 80).setOrigin(.5).setTint(0xffffff).setMaxWidth(700).setInteractive().setAlpha(0);
+      this.selectLevelText.on('pointerup', function () {
+        this.scene.stop()
+        this.scene.stop('PlayGame')
+        this.scene.start('selectLevel')
+      }, this)
+    } else {
+      this.selectLevelText = this.add.bitmapText(450, 1400, 'clarendon', 'Select Puzzle', 80).setOrigin(.5).setTint(0xffffff).setMaxWidth(700).setInteractive().setAlpha(0);
+      this.selectLevelText.on('pointerup', function () {
+        this.scene.stop()
+        this.scene.stop('PlayGame')
+        this.scene.start('selectTheme')
+      }, this)
+    }
+
+
+
 
 
     this.levelDoneText = this.add.bitmapText(1450, 1000, 'clarendon', 'Completed!', 100).setOrigin(.5).setTint(0xffffff).setMaxWidth(700);

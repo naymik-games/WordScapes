@@ -20,7 +20,7 @@ window.onload = function () {
       height: 1640
     },
 
-    scene: [preloadGame, home, selectLevel, playGame, endLevel]
+    scene: [preloadGame, home, selectLevel, selectTheme, playGame, endLevel]
   }
   game = new Phaser.Game(gameConfig);
   window.focus();
@@ -85,23 +85,29 @@ class playGame extends Phaser.Scene {
     if (onLevel > 71) {
       var count = 10
     }
-    var base = sourceWords[onLevel]
+    console.log(gameMode)
+    if (gameMode == 'book') {
+      var base = sourceWords[onLevel]
+      var wordMax = groups[onBook].wordMax
+    } else {
+      var base = sourceWordsTheme[onPuzzle]
+      var wordMax = themes[onPuzzle].wordMax
+    }
+
     //  console.log(base)
     var wordCombos = findWords(base);
     var finalCombo = wordCombos.filter(this.filterList)
     // console.log(finalCombo)
     var finalCombo1 = this.shuffle(finalCombo)
-    console.log(finalCombo1.length)
-    if (finalCombo1.length > groups[onBook].wordMax) {
+    //console.log(finalCombo1.length)
 
-    }
     //console.log(finalCombo1)
-    this.words = finalCombo1.slice(0, groups[onBook].wordMax);
+    this.words = finalCombo1.slice(0, wordMax);
     //console.log(this.words);
     this.bonus = null
     var extraCol = 0
-    if (finalCombo1.length > groups[onBook].wordMax) {
-      this.extra = finalCombo1.slice(groups[onBook].wordMax);
+    if (finalCombo1.length > wordMax) {
+      this.extra = finalCombo1.slice(wordMax);
       if (this.extra.length > 3) {
         this.extra.sort();
         //console.log(this.extra)
@@ -166,9 +172,17 @@ class playGame extends Phaser.Scene {
     this.input.on("gameobjectdown", this.clickDot, this);
     this.input.on("pointerup", this.upDot, this);
     this.input.on("gameobjectover", this.overDot, this);
+    if (gameMode == 'book') {
+      var tempL = onLevel + 1;
+      var tit = 'Level '
+      var ts = 110
+    } else {
+      var tempL = onPuzzle + 1;
+      var tit = themes[onTheme].title + ' '
+      var ts = 70
+    }
 
-    var tempL = onLevel + 1;
-    this.levelText = this.add.bitmapText(155, 75, 'clarendon', 'Level ' + tempL, 110).setOrigin(0, .5).setTint(0xffffff).setMaxWidth(700);
+    this.levelText = this.add.bitmapText(155, 75, 'clarendon', tit + tempL, ts).setOrigin(0, .5).setTint(0xffffff).setMaxWidth(700);
     // this.backText = this.add.bitmapText(25, 75, 'clarendon', '[H]', 60).setOrigin(0, .5).setTint(0xffffff).setMaxWidth(700).setInteractive();
     this.backText = this.add.image(60, 80, 'home_icon').setScale(1.5).setInteractive();
     this.backText.type = 'home'
@@ -485,15 +499,32 @@ class playGame extends Phaser.Scene {
         this.graphics.clear()
         bonusEarned += this.bonusFound
         gameData.coins = bonusEarned
-        onLevel++;
-        var tempG = (onLevel + 1) % 12
-        if (tempG == 1) {
-          onBook++;
+
+
+        if (gameMode == 'book') {
+          onLevel++;
+          var tempG = (onLevel + 1) % 12
+          if (tempG == 1) {
+            onBook++;
+          }
+          if (onLevel - 1 == gameData.level) {
+            gameData.level = onLevel;
+            gameData.book = onBook;
+          }
+        } else {
+          onPuzzle++;
+          var tempG = (onPuzzle + 1) % 12
+          if (tempG == 1) {
+            onTheme++;
+          }
+          if (onPuzzle - 1 == gameData.puzzle) {
+            gameData.puzzle = onPuzzle;
+            gameData.theme = onTheme;
+          }
         }
-        if (onLevel - 1 == gameData.level) {
-          gameData.level = onLevel;
-          gameData.book = onBook;
-        }
+
+
+
 
         this.saveData();
         this.scene.pause()
@@ -526,7 +557,7 @@ class playGame extends Phaser.Scene {
 
 
   }
-  revealAnswer_(answer) {
+  /* revealAnswer_(answer) {
     console.log(this.board)
     for (var i = 0; i < this.board.length; i++) {
       for (var j = 0; j < this.board[0].length; j++) {
@@ -538,7 +569,7 @@ class playGame extends Phaser.Scene {
         }
       }
     }
-  }
+  } */
   filterList(item) {
     if (groups[onBook].allow3) {
       return item.length > 2;

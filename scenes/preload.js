@@ -40,7 +40,13 @@ class preloadGame extends Phaser.Scene {
 
       frameHeight: 80
     });
-    this.load.spritesheet("tiles", "assets/letter-alt.png", {
+    this.load.spritesheet("tiles", "assets/letter-alt-theme.png", {
+
+      frameWidth: 80,
+
+      frameHeight: 80
+    });
+    this.load.spritesheet("tiles2", "assets/letter-alt-theme.png", {
 
       frameWidth: 80,
 

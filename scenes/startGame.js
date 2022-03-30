@@ -11,7 +11,9 @@ class home extends Phaser.Scene {
       gameData = defaultData;
     }
     onLevel = gameData.level;
-    onBook = gameData.book
+    onBook = gameData.book;
+    onTheme = gameData.theme;
+    onPuzzle = gameData.puzzle;
     bonusEarned = gameData.coins
     var tempL = onLevel + 1;
 
@@ -39,12 +41,18 @@ class home extends Phaser.Scene {
 
     this.start.setInteractive();
     this.start.on('pointerup', function () {
+      gameMode = 'book'
       this.scene.start("PlayGame");
     }, this);
     this.select = this.add.bitmapText(game.config.width / 2, 1390, 'clarendon', 'Select Level', 80).setTint(0xffffff).setOrigin(.5).setMaxWidth(500);
     this.select.setInteractive();
     this.select.on('pointerup', function () {
       this.scene.start("selectLevel");
+    }, this);
+    this.selectTheme = this.add.bitmapText(game.config.width / 2, 1590, 'clarendon', 'Select Theme', 80).setTint(0xffffff).setOrigin(.5).setMaxWidth(500);
+    this.selectTheme.setInteractive();
+    this.selectTheme.on('pointerup', function () {
+      this.scene.start("selectTheme");
     }, this);
 
   }

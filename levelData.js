@@ -64,7 +64,7 @@ let sourceWords = [
 
   'read',
   'diet',
-  'stab',
+  'stabe',
   'mean',
   'asps',
   'brace',

@@ -1,6 +1,6 @@
-class selectLevel extends Phaser.Scene {
+class selectTheme extends Phaser.Scene {
   constructor() {
-    super("selectLevel");
+    super("selectTheme");
   }
   preload() {
 
@@ -12,7 +12,7 @@ class selectLevel extends Phaser.Scene {
     var back = this.add.image(0, 0, 'home').setOrigin(0)
     back.displayWidth = game.config.width;
     back.displayHeight = game.config.height;
-    this.startGroup = onBook;
+    this.startGroup = onTheme;
     var pageTitle = this.add.bitmapText(game.config.width / 2, 100, 'clarendon', 'WorkScapes', 120).setTint(0xffffff).setOrigin(.5).setMaxWidth(500);
 
 
@@ -57,9 +57,9 @@ class selectLevel extends Phaser.Scene {
     } else {
       console.log('tap')
       if (obj[0].level > -1) {
-        onLevel = obj[0].level;
-        onBook = this.startGroup;
-        gameMode = 'book'
+        onPuzzle = obj[0].level;
+        onTheme = this.startGroup;
+        gameMode = 'theme'
         this.scene.stop()
         this.scene.start('PlayGame');
       }
@@ -74,28 +74,22 @@ class selectLevel extends Phaser.Scene {
     }
     var groupBox = this.add.container().setDepth(2);
     var tempGroup = groupNum + 1;
-    var groupTitle = this.add.bitmapText(game.config.width / 2, 200, 'clarendon', groups[groupNum].title, 80).setTint(0xfafafa).setOrigin(.5).setMaxWidth(500);
+    var groupTitle = this.add.bitmapText(game.config.width / 2, 200, 'clarendon', themes[groupNum].title, 80).setTint(0xfafafa).setOrigin(.5).setMaxWidth(500);
     groupBox.add(groupTitle);
-    var groupText = this.add.bitmapText(game.config.width / 2, 1400, 'clarendon', tempGroup + '/' + groups.length, 60).setTint(0xfafafa).setOrigin(.5).setMaxWidth(500);
+    var groupText = this.add.bitmapText(game.config.width / 2, 1400, 'clarendon', tempGroup + '/' + themes.length, 60).setTint(0xfafafa).setOrigin(.5).setMaxWidth(500);
     groupBox.add(groupText);
     //	var levelNum = groupNum + (groups[groupNum].puzzleCount -1);
 
-    var levelNum = groups[groupNum].startNum;
+    var levelNum = themes[groupNum].startNum;
 
 
-    for (var i = 0; i < 12; i++) {
+    for (var i = 0; i < 6; i++) {
       if (i < 3) {
         var xpos = 50 + i * 275;
         var ypos = 400;
       } else if (i < 6) {
         var xpos = 50 + (i - 3) * 275;
         var ypos = 400 + 275;
-      } else if (i < 9) {
-        var xpos = 50 + (i - 6) * 275;
-        var ypos = 400 + 550;
-      } else {
-        var xpos = 50 + (i - 9) * 275;
-        var ypos = 400 + 825;
       }
 
       var tempLevel = levelNum + 1;
@@ -105,17 +99,17 @@ class selectLevel extends Phaser.Scene {
 
 
 
-      if (levelNum < onLevel) {
+      if (levelNum < onPuzzle) {
         //levelTitle.setAlpha(.5)
         var statusText = this.add.bitmapText(xpos + 112.5, ypos - 60, 'clarendon', tempLevel, 90).setOrigin(.5).setTint(0x000000);
-        var wordText = this.add.bitmapText(xpos + 112.5, ypos + 20, 'clarendon', sourceWords[levelNum], 50).setOrigin(.5).setTint(0x000000);
+        var wordText = this.add.bitmapText(xpos + 112.5, ypos + 20, 'clarendon', sourceWordsTheme[levelNum], 50).setOrigin(.5).setTint(0x000000);
 
         levelTitle.setFrame(0);
         levelTitle.setInteractive();
 
-      } else if (levelNum == onLevel) {
+      } else if (levelNum == onPuzzle) {
         var statusText = this.add.bitmapText(xpos + 112.5, ypos - 60, 'clarendon', tempLevel, 90).setOrigin(.5).setTint(0x000000);
-        var wordText = this.add.bitmapText(xpos + 112.5, ypos + 20, 'clarendon', shuffle(sourceWords[levelNum]), 50).setOrigin(.5).setTint(0x000000);
+        var wordText = this.add.bitmapText(xpos + 112.5, ypos + 20, 'clarendon', shuffle(sourceWordsTheme[levelNum]), 50).setOrigin(.5).setTint(0x000000);
 
         levelTitle.setFrame(0);
         levelTitle.setInteractive();
@@ -179,7 +173,7 @@ class selectLevel extends Phaser.Scene {
 
   }
   preGroup(block, dir) {
-    if (this.startGroup < groups.length - 1) {
+    if (this.startGroup < themes.length - 1) {
       this.startGroup++;
     } else {
       this.startGroup = 0
@@ -190,16 +184,15 @@ class selectLevel extends Phaser.Scene {
     if (this.startGroup > 0) {
       this.startGroup--;
     } else {
-      this.startGroup = groups.length - 1
+      this.startGroup = themes.length - 1
     }
     this.hideGroup(this.startGroup, dir);
   }
   clickHandler(e, block) {
 
     if (block.level == -2) {
-      gameMode = 'book'
+      gameMode = 'theme'
       this.scene.start('home');
-
     }
 
   }

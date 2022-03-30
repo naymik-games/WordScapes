@@ -1,11 +1,16 @@
+let gameMode = 'book';
 let onLevel = 0;
-let onBook = 0
+let onPuzzle = 0;
+let onBook = 0;
+let onTheme = 0;
 let bonusEarned = 0;
 let gameData;
 let defaultData = {
   coins: 0,
   level: 0,
-  book: 0
+  book: 0,
+  puzzle: 0,
+  theme: 0
 }
 const shuffle = str => [...str].sort(() => Math.random() - .5).join('');
 
