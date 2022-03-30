@@ -91,7 +91,7 @@ class playGame extends Phaser.Scene {
       var wordMax = groups[onBook].wordMax
     } else {
       var base = sourceWordsTheme[onPuzzle]
-      var wordMax = themes[onPuzzle].wordMax
+      var wordMax = themes[onTheme].wordMax
     }
 
     //  console.log(base)
@@ -513,7 +513,7 @@ class playGame extends Phaser.Scene {
           }
         } else {
           onPuzzle++;
-          var tempG = (onPuzzle + 1) % 12
+          var tempG = (onPuzzle + 1) % 6
           if (tempG == 1) {
             onTheme++;
           }
