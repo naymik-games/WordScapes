@@ -10,7 +10,8 @@ let defaultData = {
   level: 0,
   book: 0,
   puzzle: 0,
-  theme: 0
+  theme: 0,
+  progress: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 }
 const shuffle = str => [...str].sort(() => Math.random() - .5).join('');
 

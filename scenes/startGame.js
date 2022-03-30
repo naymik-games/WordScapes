@@ -32,11 +32,11 @@ class home extends Phaser.Scene {
     var graphics = this.add.graphics();
     graphics.fillStyle(0x474747, 1);
     //  32px radius on the corners
-    graphics.fillRoundedRect(200, 1130, 500, 120, 64);
-
+    graphics.fillRoundedRect(200, 1050, 500, 120, 64);
+    graphics.fillRoundedRect(200, 1350, 500, 120, 64);
     ///this.levelText = this.add.bitmapText(200, 75, 'clarendon', 'Level ' + tempL, 120).setOrigin(0, .5).setTint(0xffffff).setMaxWidth(700);
 
-    this.start = this.add.bitmapText(game.config.width / 2, 1190, 'clarendon', 'Level ' + tempL, 100).setTint(0xffffff).setOrigin(.5).setMaxWidth(500);
+    this.start = this.add.bitmapText(game.config.width / 2, 1105, 'clarendon', 'Level ' + tempL, 100).setTint(0xffffff).setOrigin(.5).setMaxWidth(500);
 
 
     this.start.setInteractive();
@@ -44,12 +44,12 @@ class home extends Phaser.Scene {
       gameMode = 'book'
       this.scene.start("PlayGame");
     }, this);
-    this.select = this.add.bitmapText(game.config.width / 2, 1390, 'clarendon', 'Select Level', 80).setTint(0xffffff).setOrigin(.5).setMaxWidth(500);
+    this.select = this.add.bitmapText(game.config.width / 2, 1215, 'clarendon', 'Select Level', 70).setTint(0xffffff).setOrigin(.5).setMaxWidth(500);
     this.select.setInteractive();
     this.select.on('pointerup', function () {
       this.scene.start("selectLevel");
     }, this);
-    this.selectTheme = this.add.bitmapText(game.config.width / 2, 1590, 'clarendon', 'Select Theme', 80).setTint(0xffffff).setOrigin(.5).setMaxWidth(500);
+    this.selectTheme = this.add.bitmapText(game.config.width / 2, 1405, 'clarendon', themes[onTheme].title, 70).setTint(0xffffff).setOrigin(.5).setMaxWidth(500);
     this.selectTheme.setInteractive();
     this.selectTheme.on('pointerup', function () {
       this.scene.start("selectTheme");
