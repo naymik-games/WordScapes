@@ -80,6 +80,8 @@ class playGame extends Phaser.Scene {
     this.selected = null;
     this.revealLetter = false;
     this.revealWord = false;
+    this.letterClueCost = 5;
+    this.wordClueCost = 10;
     if (onLevel > 71) {
       var count = 10
     }
@@ -166,8 +168,9 @@ class playGame extends Phaser.Scene {
     this.input.on("gameobjectover", this.overDot, this);
 
     var tempL = onLevel + 1;
-    this.levelText = this.add.bitmapText(155, 75, 'clarendon', 'Level ' + tempL, 120).setOrigin(0, .5).setTint(0xffffff).setMaxWidth(700);
-    this.backText = this.add.bitmapText(25, 75, 'clarendon', '[H]', 60).setOrigin(0, .5).setTint(0xffffff).setMaxWidth(700).setInteractive();
+    this.levelText = this.add.bitmapText(155, 75, 'clarendon', 'Level ' + tempL, 110).setOrigin(0, .5).setTint(0xffffff).setMaxWidth(700);
+    // this.backText = this.add.bitmapText(25, 75, 'clarendon', '[H]', 60).setOrigin(0, .5).setTint(0xffffff).setMaxWidth(700).setInteractive();
+    this.backText = this.add.image(60, 80, 'home_icon').setScale(1.5).setInteractive();
     this.backText.type = 'home'
 
     this.starBack = this.add.image(640, 75, 'platform').setOrigin(0, .5).setTint(0x000000).setAlpha(.7);
@@ -175,9 +178,9 @@ class playGame extends Phaser.Scene {
     this.starBack.displayHeight = 75
 
     this.bonusEarnedText = this.add.bitmapText(715, 75, 'clarendon', gameData.coins, 80).setOrigin(0, .5).setTint(0xffffff).setMaxWidth(700);
-    this.starIcon = this.add.image(640, 75, 'star').setScale(.25)
+    this.starIcon = this.add.image(640, 75, 'star').setScale(.20)
 
-    this.star = this.add.image(100, 1550, 'star').setScale(.2)
+    this.star = this.add.image(100, 1550, 'star').setScale(.25)
     this.guessText = this.add.bitmapText(450, 990, 'clarendon', '', 130).setOrigin(.5).setTint(0xffffff).setMaxWidth(700);
     this.guessFakeText = this.add.bitmapText(450, 990, 'clarendon', '', 130).setOrigin(.5).setTint(0xffffff).setMaxWidth(700);
 
@@ -206,26 +209,78 @@ class playGame extends Phaser.Scene {
       return
     }
     if (tile.type == 'letterClue') {
-      tile.setScale(1.5).setTint(0x00ff00)
-      this.revealLetter = true;
+      if (this.revealLetter) {
+        this.revealLetter = false;
+        tile.setScale(1).clearTint();
+      } else {
+        if (bonusEarned >= this.letterClueCost) {
+          tile.setScale(1.5).setTint(0x00ff00)
+          this.revealLetter = true;
+        }
+      }
+
+
       return
     }
     if (tile.type == 'wordClue') {
-      tile.setScale(1.5).setTint(0x00ff00)
-      this.revealWord = true;
+      if (this.revealWord) {
+        this.revealWord = true;
+        tile.setScale(1).clearTint();
+      } else {
+        if (bonusEarned >= this.wordClueCost) {
+          tile.setScale(1.5).setTint(0x00ff00)
+          this.revealWord = true;
+        }
+      }
+
       return
     }
     if (tile.type == 'answer') {
       if (this.revealLetter) {
+        bonusEarned -= this.letterClueCost
+        gameData.coins = bonusEarned
+        this.bonusEarnedText.setText(bonusEarned)
+        this.saveData();
         tile.setFrame(tile.index)
         this.revealLetter = false;
         this.letterButton.setScale(1).clearTint()
+        this.tweens.add({
+          targets: [this.bonusEarnedText],
+          x: '+=25',
+          duration: 50,
+          ease: 'Linear',
+          yoyo: true,
+          repeat: 2,
+          callbackScope: this,
+          onComplete: function () {
+            this.guess = '';
+            this.guessText.setText(this.guess);
+          }
+        });
+
       } else if (this.revealWord) {
+        bonusEarned -= this.wordClueCost
+        gameData.coins = bonusEarned
+        this.bonusEarnedText.setText(bonusEarned)
+        this.saveData();
         this.revealAnswer(tile.word)
         this.puzzleFound++;
         this.foundWords.push(tile.word)
         this.revealWord = false;
         this.wordButton.setScale(1).clearTint()
+        this.tweens.add({
+          targets: [this.bonusEarnedText],
+          x: '+=25',
+          duration: 50,
+          ease: 'Linear',
+          yoyo: true,
+          repeat: 2,
+          callbackScope: this,
+          onComplete: function () {
+            this.guess = '';
+            this.guessText.setText(this.guess);
+          }
+        });
         if (this.puzzleFound == this.words.length) {
           this.levelEnd()
         }
@@ -234,8 +289,6 @@ class playGame extends Phaser.Scene {
       }
     }
     if (tile.type == 'key') {
-
-
       this.guess += tile.letter
       tile.setAlpha(.5)
       //console.log(this.guess)
@@ -317,7 +370,7 @@ class playGame extends Phaser.Scene {
       //this.cameras.main.shake(200, 0.02);
       var tween = this.tweens.add({
         targets: this.star,
-        scale: .5,
+        scale: .4,
         yoyo: true,
         duration: 300
       })
@@ -390,18 +443,35 @@ class playGame extends Phaser.Scene {
         alpha: { from: 1, to: .1 },
         //scale: 1.3,
         ease: "Linear",
-        duration: 1000,
+        duration: 500,
         callbackScope: this,
         onComplete: function () {
-
+          var tween = this.tweens.add({
+            targets: this.star,
+            scale: .4,
+            yoyo: true,
+            duration: 300
+          })
           this.guessFakeText.setText('');
         }
       });
     } else {
       //not a word
-      this.cameras.main.shake(200, 0.02);
-      this.guess = '';
-      this.guessText.setText(this.guess);
+      //this.cameras.main.shake(200, 0.02);
+      this.tweens.add({
+        targets: this.guessText,
+        x: '+=25',
+        duration: 50,
+        ease: 'Linear',
+        yoyo: true,
+        repeat: 2,
+        callbackScope: this,
+        onComplete: function () {
+          this.guess = '';
+          this.guessText.setText(this.guess);
+        }
+      });
+
     }
   }
   levelEnd() {
@@ -425,7 +495,7 @@ class playGame extends Phaser.Scene {
           gameData.book = onBook;
         }
 
-        localStorage.setItem('WSdata', JSON.stringify(gameData));
+        this.saveData();
         this.scene.pause()
         this.scene.launch("endLevel");
       }
@@ -659,6 +729,9 @@ class playGame extends Phaser.Scene {
     }
 
     return array;
+  }
+  saveData() {
+    localStorage.setItem('WSdata', JSON.stringify(gameData));
   }
 
 }

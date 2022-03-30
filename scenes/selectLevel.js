@@ -18,8 +18,8 @@ class selectLevel extends Phaser.Scene {
 
     this.showGroup(this.startGroup);
     // this.return = this.add.image(game.config.width / 2, 1550, 'pixel').setScale(1.5).setInteractive().setTint(0xc76210);
-    this.return = this.add.bitmapText(game.config.width / 2, 1550, 'clarendon', '[<]', 100).setTint(0xffffff).setOrigin(.5).setMaxWidth(500).setInteractive();
-
+    //this.return = this.add.bitmapText(game.config.width / 2, 1550, 'clarendon', '[<]', 100).setTint(0xffffff).setOrigin(.5).setMaxWidth(500).setInteractive();
+    this.return = this.add.image(game.config.width / 2, 1550, 'home_icon').setScale(2).setInteractive();
     //this.backText = this.add.bitmapText(game.config.width / 2, 1500, 'clarendon', '< back', 60).setOrigin(.5, .5).setTint(0xd8a603).setInteractive();
     this.return.level = -2;
     this.input.topOnly = true;
