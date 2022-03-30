@@ -6,7 +6,8 @@ let groups = [
   { title: 'fun 4', startNum: 36, wordMax: 8, allow3: true },
   { title: 'fun 5', startNum: 48, wordMax: 8, allow3: true },
   { title: 'fun 6', startNum: 60, wordMax: 9, allow3: true },
-  { title: 'fun 7', startNum: 72, wordMax: 9, allow3: true }
+  { title: 'fun 7', startNum: 72, wordMax: 9, allow3: true },
+  { title: 'fun 8', startNum: 84, wordMax: 8, allow3: true }
 ]
 let sourceWords = [
   'act',
@@ -97,4 +98,22 @@ let sourceWords = [
   'master',
   'match',
   'picture',
+  //8
+  'plastic',
+  'plot',
+  'benefit',
+  'shirt',
+  'target',
+  'wander',
+  'because',
+  'beneath',
+  'leading',
+  'normal',
+  'observe',
+  ' opponent'
+  //9
+  /*  'hansolo',
+   'blaster',
+   'falcon',
+   '' */
 ]

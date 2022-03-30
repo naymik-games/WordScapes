@@ -177,7 +177,7 @@ class playGame extends Phaser.Scene {
     this.bonusEarnedText = this.add.bitmapText(715, 75, 'clarendon', gameData.coins, 80).setOrigin(0, .5).setTint(0xffffff).setMaxWidth(700);
     this.starIcon = this.add.image(640, 75, 'star').setScale(.25)
 
-    this.star = this.add.image(100, 1550, 'star').setScale(.3)
+    this.star = this.add.image(100, 1550, 'star').setScale(.2)
     this.guessText = this.add.bitmapText(450, 990, 'clarendon', '', 130).setOrigin(.5).setTint(0xffffff).setMaxWidth(700);
     this.guessFakeText = this.add.bitmapText(450, 990, 'clarendon', '', 130).setOrigin(.5).setTint(0xffffff).setMaxWidth(700);
 
@@ -420,9 +420,11 @@ class playGame extends Phaser.Scene {
         if (tempG == 1) {
           onBook++;
         }
+        if (onLevel - 1 == gameData.level) {
+          gameData.level = onLevel;
+          gameData.book = onBook;
+        }
 
-        gameData.level = onLevel;
-        gameData.book = onBook;
         localStorage.setItem('WSdata', JSON.stringify(gameData));
         this.scene.pause()
         this.scene.launch("endLevel");

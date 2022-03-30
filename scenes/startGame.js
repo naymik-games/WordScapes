@@ -12,6 +12,7 @@ class home extends Phaser.Scene {
     }
     onLevel = gameData.level;
     onBook = gameData.book
+    bonusEarned = gameData.coins
     var tempL = onLevel + 1;
 
     var back = this.add.image(0, 0, 'home').setOrigin(0)
@@ -20,7 +21,7 @@ class home extends Phaser.Scene {
     this.starBack.displayWidth = 250
     this.starBack.displayHeight = 75
 
-    this.bonusEarnedText = this.add.bitmapText(715, 75, 'clarendon', gameData.coins, 80).setOrigin(0, .5).setTint(0xffffff).setMaxWidth(700);
+    this.bonusEarnedText = this.add.bitmapText(715, 75, 'clarendon', bonusEarned, 80).setOrigin(0, .5).setTint(0xffffff).setMaxWidth(700);
     this.starIcon = this.add.image(640, 75, 'star').setScale(.25)
 
     this.title = this.add.bitmapText(game.config.width / 2, 300, 'clarendon', 'WordScapes', 140).setTint(0xffffff).setOrigin(.5).setMaxWidth(500);

@@ -13,11 +13,11 @@ class selectLevel extends Phaser.Scene {
     back.displayWidth = game.config.width;
     back.displayHeight = game.config.height;
     this.startGroup = onBook;
-var pageTitle = this.add.bitmapText(game.config.width / 2, 100, 'clarendon', 'WorkScapes', 120).setTint(0xffffff).setOrigin(.5).setMaxWidth(500);
+    var pageTitle = this.add.bitmapText(game.config.width / 2, 100, 'clarendon', 'WorkScapes', 120).setTint(0xffffff).setOrigin(.5).setMaxWidth(500);
 
 
     this.showGroup(this.startGroup);
-   // this.return = this.add.image(game.config.width / 2, 1550, 'pixel').setScale(1.5).setInteractive().setTint(0xc76210);
+    // this.return = this.add.image(game.config.width / 2, 1550, 'pixel').setScale(1.5).setInteractive().setTint(0xc76210);
     this.return = this.add.bitmapText(game.config.width / 2, 1550, 'clarendon', '[<]', 100).setTint(0xffffff).setOrigin(.5).setMaxWidth(500).setInteractive();
 
     //this.backText = this.add.bitmapText(game.config.width / 2, 1500, 'clarendon', '< back', 60).setOrigin(.5, .5).setTint(0xd8a603).setInteractive();
@@ -107,19 +107,20 @@ var pageTitle = this.add.bitmapText(game.config.width / 2, 100, 'clarendon', 'Wo
       if (levelNum < onLevel) {
         //levelTitle.setAlpha(.5)
         var statusText = this.add.bitmapText(xpos + 112.5, ypos - 60, 'clarendon', tempLevel, 90).setOrigin(.5).setTint(0x000000);
-var wordText = this.add.bitmapText(xpos + 112.5, ypos + 20, 'clarendon', sourceWords[levelNum], 50).setOrigin(.5).setTint(0x000000);
+        var wordText = this.add.bitmapText(xpos + 112.5, ypos + 20, 'clarendon', sourceWords[levelNum], 50).setOrigin(.5).setTint(0x000000);
 
         levelTitle.setFrame(0);
         levelTitle.setInteractive();
 
-      } else if(levelNum == onLevel){
+      } else if (levelNum == onLevel) {
         var statusText = this.add.bitmapText(xpos + 112.5, ypos - 60, 'clarendon', tempLevel, 90).setOrigin(.5).setTint(0x000000);
-var wordText = this.add.bitmapText(xpos + 112.5, ypos + 20, 'clarendon', shuffle(sourceWords[levelNum]), 50).setOrigin(.5).setTint(0x000000);
+        var wordText = this.add.bitmapText(xpos + 112.5, ypos + 20, 'clarendon', shuffle(sourceWords[levelNum]), 50).setOrigin(.5).setTint(0x000000);
 
         levelTitle.setFrame(0);
         levelTitle.setInteractive();
       } else {
         levelTitle.setFrame(1);
+        var wordText = this.add.bitmapText(xpos + 112.5, ypos + 20, 'clarendon', '', 50).setOrigin(.5).setTint(0x000000);
 
 
       }
