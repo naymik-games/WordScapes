@@ -517,6 +517,7 @@ class playGame extends Phaser.Scene {
           if (tempG == 1) {
             onTheme++;
           }
+          
           if (onPuzzle - 1 == gameData.puzzle) {
             gameData.puzzle = onPuzzle;
             gameData.theme = onTheme;

@@ -97,12 +97,12 @@ class selectTheme extends Phaser.Scene {
       var levelTitle = this.add.image(xpos, ypos, 'select_icons', 1).setOrigin(0, .5).setScale(.75);
       levelTitle.level = levelNum;
 
-var wordText = this.add.bitmapText(xpos + 112.5, ypos + 20, 'clarendon', shuffle(sourceWordsTheme[levelNum]), 50).setOrigin(.5).setTint(0x000000);
+//var wordText = this.add.bitmapText(xpos + 112.5, ypos + 20, 'clarendon', shuffle(sourceWordsTheme[levelNum]), 50).setOrigin(.5).setTint(0x000000);
 
-        levelTitle.setFrame(0);
-        levelTitle.setInteractive();
+      //  levelTitle.setFrame(0);
+      //  levelTitle.setInteractive();
 
-     /* if (levelNum < onPuzzle) {
+      if (gameData.progress[onTheme][i] == 1) {
         //levelTitle.setAlpha(.5)
         var statusText = this.add.bitmapText(xpos + 112.5, ypos - 60, 'clarendon', tempLevel, 90).setOrigin(.5).setTint(0x000000);
         var wordText = this.add.bitmapText(xpos + 112.5, ypos + 20, 'clarendon', sourceWordsTheme[levelNum], 50).setOrigin(.5).setTint(0x000000);
@@ -110,18 +110,13 @@ var wordText = this.add.bitmapText(xpos + 112.5, ypos + 20, 'clarendon', shuffle
         levelTitle.setFrame(0);
         levelTitle.setInteractive();
 
-      } else if (levelNum == onPuzzle) {
+      } else {
         var statusText = this.add.bitmapText(xpos + 112.5, ypos - 60, 'clarendon', tempLevel, 90).setOrigin(.5).setTint(0x000000);
         var wordText = this.add.bitmapText(xpos + 112.5, ypos + 20, 'clarendon', shuffle(sourceWordsTheme[levelNum]), 50).setOrigin(.5).setTint(0x000000);
 
         levelTitle.setFrame(0);
         levelTitle.setInteractive();
-      } else {
-        levelTitle.setFrame(1);
-        var wordText = this.add.bitmapText(xpos + 112.5, ypos + 20, 'clarendon', '', 50).setOrigin(.5).setTint(0x000000);
-
-
-      }*/
+      } 
       levelNum++;
       groupBox.add(levelTitle);
       groupBox.add(statusText);
