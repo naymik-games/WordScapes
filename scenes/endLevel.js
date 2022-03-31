@@ -13,11 +13,13 @@ class endLevel extends Phaser.Scene {
 
     if (gameMode == 'book') {
       var tempL = onLevel + 1;
+      var text = 'Level ' + tempL
     } else {
       var tempL = onPuzzle + 1;
+      var text = themes[onTheme].title
     }
 
-    this.nextLevelText = this.add.bitmapText(450, 1200, 'clarendon', 'Level ' + tempL, 100).setOrigin(.5).setTint(0xffffff).setMaxWidth(700).setInteractive().setAlpha(0);
+    this.nextLevelText = this.add.bitmapText(450, 1200, 'clarendon', text, 100).setOrigin(.5).setTint(0xffffff).setMaxWidth(700).setInteractive().setAlpha(0);
     this.nextLevelText.on('pointerdown', function () {
       var tween = this.tweens.add({
         targets: this.levelDoneText,
@@ -34,7 +36,13 @@ class endLevel extends Phaser.Scene {
             callbackScope: this,
             onComplete: function () {
               this.scene.stop()
-              this.scene.start('PlayGame')
+              if (gameMode == 'book') {
+                this.scene.start('PlayGame')
+              } else {
+                this.scene.stop('PlayGame')
+                this.scene.start('selectTheme')
+              }
+
             }
           })
         }
@@ -52,12 +60,12 @@ class endLevel extends Phaser.Scene {
         this.scene.start('selectLevel')
       }, this)
     } else {
-      this.selectLevelText = this.add.bitmapText(450, 1400, 'clarendon', 'Select Puzzle', 80).setOrigin(.5).setTint(0xffffff).setMaxWidth(700).setInteractive().setAlpha(0);
-      this.selectLevelText.on('pointerup', function () {
-        this.scene.stop()
-        this.scene.stop('PlayGame')
-        this.scene.start('selectTheme')
-      }, this)
+      /*  this.selectLevelText = this.add.bitmapText(450, 1400, 'clarendon', 'Select Puzzle', 80).setOrigin(.5).setTint(0xffffff).setMaxWidth(700).setInteractive().setAlpha(0);
+       this.selectLevelText.on('pointerup', function () {
+         this.scene.stop()
+         this.scene.stop('PlayGame')
+         this.scene.start('selectTheme')
+       }, this) */
     }
 
 

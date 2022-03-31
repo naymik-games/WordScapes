@@ -115,7 +115,7 @@ class selectTheme extends Phaser.Scene {
         //levelTitle.setAlpha(.5)
         var statusText = this.add.bitmapText(xpos + 112.5, ypos - 60, 'clarendon', tempLevel, 90).setOrigin(.5).setTint(0x000000);
         var wordText = this.add.bitmapText(xpos + 112.5, ypos + 20, 'clarendon', sourceWordsTheme[levelNum], 50).setOrigin(.5).setTint(0x000000);
-        levelTitle.setTint(0x00ff00)
+        wordText.setTint(0x228f3f)
         levelTitle.setFrame(0);
         levelTitle.setInteractive();
 

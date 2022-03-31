@@ -234,7 +234,10 @@ class playGame extends Phaser.Scene {
       return
     }
     if (tile.type == 'home') {
-      this.music.pause();
+      if (gameData.music) {
+        this.music.pause();
+      }
+
       this.scene.stop();
       this.scene.start('home');
 
@@ -530,15 +533,26 @@ class playGame extends Phaser.Scene {
             gameData.book = onBook;
           }
         } else {
-          var lev = onPuzzle % (6 * onTheme)
-          gameData.progress[onTheme][lev] = 1
+          if (onTheme > 0) {
+            var lev = onPuzzle % (6 * onTheme)
+            gameData.progress[onTheme][lev] = 1
+          } else {
+            gameData.progress[onTheme][onPuzzle] = 1
+
+          }
+          if (this.themeDone()) {
+            this.unlockNext(onTheme + 1)
+          }
+
         }
 
 
 
 
         this.saveData();
-        this.music.pause();
+        if (gameData.music) {
+          this.music.pause();
+        }
         this.scene.pause()
         this.scene.launch("endLevel");
       }
@@ -549,6 +563,21 @@ class playGame extends Phaser.Scene {
       duration: 200,
       delay: 200,
     });
+
+  }
+  themeDone() {
+    for (var i = 0; i < 6; i++) {
+      if (gameData.progress[onTheme][i] == 0) {
+        return false
+      }
+    }
+    return true
+  }
+  unlockNext(t) {
+    for (var i = 0; i < 6; i++) {
+      gameData.progress[t][i] = 0
+
+    }
 
   }
   revealAnswer(answer) {
