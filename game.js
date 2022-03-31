@@ -16,7 +16,7 @@ window.onload = function () {
       height: 1640
     },
 
-    scene: [preloadGame, home, selectLevel, selectTheme, playGame, endLevel]
+    scene: [preloadGame, home, options, selectLevel, selectTheme, playGame, endLevel]
   }
   game = new Phaser.Game(gameConfig);
   window.focus();
@@ -37,6 +37,13 @@ class playGame extends Phaser.Scene {
 
   }
   create() {
+
+    if (gameData.music) {
+      this.music = this.sound.add('music_01');
+      this.music.play();
+    }
+
+
 
     this.bgcolors = [0x474646, 0xba9696, 0x96baa4, 0x96bab6, 0x96adba, 0x222222];
 
@@ -227,8 +234,10 @@ class playGame extends Phaser.Scene {
       return
     }
     if (tile.type == 'home') {
+      this.music.pause();
       this.scene.stop();
       this.scene.start('home');
+
       return
     }
     if (tile.type == 'letterClue') {
@@ -529,6 +538,7 @@ class playGame extends Phaser.Scene {
 
 
         this.saveData();
+        this.music.pause();
         this.scene.pause()
         this.scene.launch("endLevel");
       }

@@ -13,8 +13,9 @@ let defaultData = {
   theme: 0,
   progress: [[0, 0, 0, 0, 0, 0], [-1, -1, -1, -1, -1, -1]],
   tileOption: 0,
+  music: true
 }
 const shuffle = str => [...str].sort(() => Math.random() - .5).join('');
 
 let backs = ['back_00', 'back_01', 'back_02', 'back_03', 'back_04', 'back_05', 'back_06', 'back_07', 'back_07', 'back_08', 'back_09', 'back_10', 'back_11', 'back_12', 'back_13', 'back_14', 'back_15', 'back_16']
-let tileImages = ['tiles-01', 'tiles-02', 'tiles-03']
+let tileImages = ['tiles-01', 'tiles-02', 'tiles-03', 'tiles-04']

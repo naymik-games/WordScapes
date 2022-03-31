@@ -5,6 +5,8 @@ class preloadGame extends Phaser.Scene {
   preload() {
     this.load.image("pixel", "assets/sprites/particle.png");
 
+    this.load.audio('music_01', ['assets/sound/Inspiring-Acoustic-Guitar.mp3']);
+
     this.load.bitmapFont("clarendon", "assets/fonts/lato.png", "assets/fonts/lato.xml");
     this.load.image("star", "assets/sprites/star.png");
     this.load.image("back_00", "assets/sprites/backs/back_00.png");
@@ -26,11 +28,16 @@ class preloadGame extends Phaser.Scene {
     this.load.image("back_16", "assets/sprites/backs/back_16.png");
     this.load.image("home", "assets/sprites/home.png");
     this.load.image("home_icon", "assets/sprites/home_button.png");
+    this.load.image("settings_icon", "assets/sprites/settings_button.png");
+    this.load.image("check", "assets/sprites/check.png");
     this.load.spritesheet("select_icons", "assets/sprites/select_icons.png", {
       frameWidth: 300,
       frameHeight: 300
     });
-
+    this.load.spritesheet("toggle", "assets/sprites/toggle.png", {
+      frameWidth: 96,
+      frameHeight: 96
+    });
     this.load.image("platform", "assets/platform.png");
     this.load.image("particle", "assets/sprites/particle.png");
     this.load.text('dictionary', 'assets/dictionary-plural1.txt');
@@ -41,6 +48,12 @@ class preloadGame extends Phaser.Scene {
       frameHeight: 80
     });
     this.load.spritesheet("tiles-03", "assets/letter-alt.png", {
+
+      frameWidth: 80,
+
+      frameHeight: 80
+    });
+    this.load.spritesheet("tiles-04", "assets/letter_alt_green.png", {
 
       frameWidth: 80,
 
