@@ -4,10 +4,6 @@ let wordy;
 let bonusTotalCount = 0;
 let arrayWords = [];
 
-
-
-
-
 window.onload = function () {
   let gameConfig = {
     type: Phaser.AUTO,
@@ -57,7 +53,7 @@ class playGame extends Phaser.Scene {
 
 
     this.tiles = this.add.group({
-      defaultKey: "tiles",
+      defaultKey: tileImages[gameData.tileOption],
       // defaultFrame: 1,
       maxSize: 10,
       visible: false,
@@ -65,7 +61,7 @@ class playGame extends Phaser.Scene {
     });
 
     this.answerTiles = this.add.group({
-      defaultKey: "tiles",
+      defaultKey: tileImages[gameData.tileOption],
       defaultFrame: 26,
       maxSize: 150,
       visible: false,
@@ -85,7 +81,7 @@ class playGame extends Phaser.Scene {
     if (onLevel > 71) {
       var count = 10
     }
-    console.log(gameMode)
+    //set source word and max setting form appropriate file based on game mode
     if (gameMode == 'book') {
       var base = sourceWords[onLevel]
       var wordMax = groups[onBook].wordMax
@@ -94,29 +90,42 @@ class playGame extends Phaser.Scene {
       var wordMax = themes[onTheme].wordMax
     }
 
-    //  console.log(base)
+    //get a list of words based on the source word
     var wordCombos = findWords(base);
+    //filter out 2 or 3 letter words based on setting for group or theme
     var finalCombo = wordCombos.filter(this.filterList)
-    // console.log(finalCombo)
+    //for theme mode, remove the base word from selection in puzzle. Will be used for bonus word
+    if (gameMode == 'theme') {
+      const index = finalCombo.indexOf(base);
+      if (index > -1) {
+        finalCombo.splice(index, 1); // 2nd parameter means remove one item only
+      }
+    }
+    //shuffle remaining words
     var finalCombo1 = this.shuffle(finalCombo)
-    //console.log(finalCombo1.length)
-
-    //console.log(finalCombo1)
+    //slice out the number of words to satisfy puzzle
     this.words = finalCombo1.slice(0, wordMax);
-    //console.log(this.words);
+    //start with no bonus word ;
     this.bonus = null
     var extraCol = 0
-    if (finalCombo1.length > wordMax) {
-      this.extra = finalCombo1.slice(wordMax);
-      if (this.extra.length > 3) {
-        this.extra.sort();
-        //console.log(this.extra)
-        this.bonus = this.extra.pop()
-        console.log(this.bonus)
-        extraCol = 1;
+    //for book mode, get bonus word if
+    if (gameMode == 'book') {
+      //there are extra available words
+      if (finalCombo1.length > wordMax) {
+        this.extra = finalCombo1.slice(wordMax);
+        //and more than 3 of them
+        if (this.extra.length > 3) {
+          this.extra.sort();
+          //grab largets word (sort above)
+          this.bonus = this.extra.pop()
+          //add extra column to grid so there is room
+          extraCol = 1;
+        }
       }
-
-
+    } else {
+      //for theme mode, extra word equals base word
+      this.bonus = base;
+      extraCol = 1;
     }
     var board = Create(this.words);
     //
@@ -137,11 +146,11 @@ class playGame extends Phaser.Scene {
     } */
     //console.log(this.blockSize)
     this.createBoard(board);
-
+    //add the bonus word if exists.  Hints don't work on these.
     if (this.bonus) {
       this.bonusArray = []
       for (var b = 0; b < this.bonus.length; b++) {
-        var bonusTile = this.add.image(825, 200 + b * this.blockSize, 'tiles', 27)
+        var bonusTile = this.add.image(825, 200 + b * this.blockSize, tileImages[gameData.tileOption], 27)
         bonusTile.displayWidth = this.blockSize;
         bonusTile.displayHeight = this.blockSize;
         bonusTile.word = this.bonus
@@ -512,16 +521,8 @@ class playGame extends Phaser.Scene {
             gameData.book = onBook;
           }
         } else {
-          onPuzzle++;
-          var tempG = (onPuzzle + 1) % 6
-          if (tempG == 1) {
-            onTheme++;
-          }
-          
-          if (onPuzzle - 1 == gameData.puzzle) {
-            gameData.puzzle = onPuzzle;
-            gameData.theme = onTheme;
-          }
+          var lev = onPuzzle % (6 * onTheme)
+          gameData.progress[onTheme][lev] = 1
         }
 
 
@@ -587,7 +588,7 @@ class playGame extends Phaser.Scene {
       var p = this.drawPoint(200, i, totalPoints);
       this.keyCoordinates.push(p)
       var ind = this.tileLetters.indexOf(base1[i - 1])
-      var tile = this.add.image(p.x, p.y, 'tiles', ind).setScale(1.5).setInteractive()
+      var tile = this.add.image(p.x, p.y, tileImages[gameData.tileOption], ind).setScale(1.5).setInteractive()
       tile.inedex = ind
       tile.letter = base1[i - 1]
       tile.type = 'key'

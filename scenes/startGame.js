@@ -10,6 +10,14 @@ class home extends Phaser.Scene {
         JSON.stringify(defaultData));
       gameData = defaultData;
     }
+    if (gameData.progress.length < themes.length) {
+      var i = themes.length - gameData.progress.length
+      var temp = [-1, -1, -1, -1, -1, -1]
+      for (var j = 0; j < i; j++) {
+        gameData.progress.push(temp)
+      }
+      this.saveData()
+    }
     onLevel = gameData.level;
     onBook = gameData.book;
     onTheme = gameData.theme;
@@ -55,5 +63,8 @@ class home extends Phaser.Scene {
       this.scene.start("selectTheme");
     }, this);
 
+  }
+  saveData() {
+    localStorage.setItem('WSdata', JSON.stringify(gameData));
   }
 }

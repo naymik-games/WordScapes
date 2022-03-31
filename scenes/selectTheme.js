@@ -56,8 +56,10 @@ class selectTheme extends Phaser.Scene {
       }
     } else {
       console.log('tap')
+
       if (obj[0].level > -1) {
-        onPuzzle = obj[0].level;
+        onPuzzle = obj[0].level + (this.startGroup * 6);
+        console.log('onPuzzle' + onPuzzle)
         onTheme = this.startGroup;
         gameMode = 'theme'
         this.scene.stop()
@@ -79,10 +81,20 @@ class selectTheme extends Phaser.Scene {
     var groupText = this.add.bitmapText(game.config.width / 2, 1400, 'clarendon', tempGroup + '/' + themes.length, 60).setTint(0xfafafa).setOrigin(.5).setMaxWidth(500);
     groupBox.add(groupText);
     //	var levelNum = groupNum + (groups[groupNum].puzzleCount -1);
-
+    var completeText = this.add.bitmapText(game.config.width / 2, 1000, 'clarendon', '', 90).setOrigin(.5).setTint(0xffffff);
+    groupBox.add(completeText);
     var levelNum = themes[groupNum].startNum;
-
-
+    var count = 0;
+    for (var j = 0; j < 6; j++) {
+      if (gameData.progress[groupNum][j] == 1) {
+        count++
+      }
+    }
+    if (count == 6) {
+      completeText.setText('Complete!')
+    } else {
+      completeText.setText(count + ' finished')
+    }
     for (var i = 0; i < 6; i++) {
       if (i < 3) {
         var xpos = 50 + i * 275;
@@ -92,31 +104,31 @@ class selectTheme extends Phaser.Scene {
         var ypos = 400 + 275;
       }
 
-      var tempLevel = levelNum + 1;
+      var tempLevel = i + 1;
       var statusText = this.add.bitmapText(xpos + 112.5, ypos - 60, 'clarendon', tempLevel, 90).setOrigin(.5).setTint(0x000000);
       var levelTitle = this.add.image(xpos, ypos, 'select_icons', 1).setOrigin(0, .5).setScale(.75);
-      levelTitle.level = levelNum;
+      levelTitle.level = i;
 
-//var wordText = this.add.bitmapText(xpos + 112.5, ypos + 20, 'clarendon', shuffle(sourceWordsTheme[levelNum]), 50).setOrigin(.5).setTint(0x000000);
 
-      //  levelTitle.setFrame(0);
-      //  levelTitle.setInteractive();
 
-      if (gameData.progress[onTheme][i] == 1) {
+      if (gameData.progress[groupNum][i] == 1) {
         //levelTitle.setAlpha(.5)
         var statusText = this.add.bitmapText(xpos + 112.5, ypos - 60, 'clarendon', tempLevel, 90).setOrigin(.5).setTint(0x000000);
         var wordText = this.add.bitmapText(xpos + 112.5, ypos + 20, 'clarendon', sourceWordsTheme[levelNum], 50).setOrigin(.5).setTint(0x000000);
-
+        levelTitle.setTint(0x00ff00)
         levelTitle.setFrame(0);
         levelTitle.setInteractive();
 
-      } else {
+      } else if (gameData.progress[groupNum][i] == 0) {
         var statusText = this.add.bitmapText(xpos + 112.5, ypos - 60, 'clarendon', tempLevel, 90).setOrigin(.5).setTint(0x000000);
         var wordText = this.add.bitmapText(xpos + 112.5, ypos + 20, 'clarendon', shuffle(sourceWordsTheme[levelNum]), 50).setOrigin(.5).setTint(0x000000);
 
         levelTitle.setFrame(0);
         levelTitle.setInteractive();
-      } 
+      } else if (gameData.progress[groupNum][i] == -1) {
+        var wordText = this.add.bitmapText(xpos + 112.5, ypos + 20, 'clarendon', '', 50).setOrigin(.5).setTint(0x000000);
+        levelTitle.level = -1;
+      }
       levelNum++;
       groupBox.add(levelTitle);
       groupBox.add(statusText);
