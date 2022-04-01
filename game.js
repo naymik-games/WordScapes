@@ -47,6 +47,11 @@ class playGame extends Phaser.Scene {
 
     this.bgcolors = [0x474646, 0xba9696, 0x96baa4, 0x96bab6, 0x96adba, 0x222222];
 
+    var rand = Phaser.Math.Between(0, backs.length - 1)
+    var back = this.add.image(0, 0, backs[rand]).setOrigin(0)
+    back.displayWidth = game.config.width;
+    back.displayHeight = game.config.height;
+
     this.board = [];
 
     this.wordList = [];
@@ -85,73 +90,27 @@ class playGame extends Phaser.Scene {
     this.revealWord = false;
     this.letterClueCost = 5;
     this.wordClueCost = 10;
+    this.foundBonus = false;
+    this.bonus = null
+    this.extraCol = 0
     if (onLevel > 71) {
       var count = 10
     }
-    //set source word and max setting form appropriate file based on game mode
-    if (gameMode == 'book') {
-      var base = sourceWords[onLevel]
-      var wordMax = groups[onBook].wordMax
-    } else {
-      var base = sourceWordsTheme[onPuzzle]
-      var wordMax = themes[onTheme].wordMax
-    }
 
-    //get a list of words based on the source word
-    var wordCombos = findWords(base);
-    //filter out 2 or 3 letter words based on setting for group or theme
-    var finalCombo = wordCombos.filter(this.filterList)
-    //for theme mode, remove the base word from selection in puzzle. Will be used for bonus word
-    if (gameMode == 'theme') {
-      const index = finalCombo.indexOf(base);
-      if (index > -1) {
-        finalCombo.splice(index, 1); // 2nd parameter means remove one item only
-      }
-    }
-    //shuffle remaining words
-    var finalCombo1 = this.shuffle(finalCombo)
-    //slice out the number of words to satisfy puzzle
-    this.words = finalCombo1.slice(0, wordMax);
-    //start with no bonus word ;
-    this.bonus = null
-    var extraCol = 0
-    //for book mode, get bonus word if
+    //////////////////////////////////////////
+
+    //create word list and set up crossword layout based on game mode
     if (gameMode == 'book') {
-      //there are extra available words
-      if (finalCombo1.length > wordMax) {
-        this.extra = finalCombo1.slice(wordMax);
-        //and more than 3 of them
-        if (this.extra.length > 3) {
-          this.extra.sort();
-          //grab largets word (sort above)
-          this.bonus = this.extra.pop()
-          //add extra column to grid so there is room
-          extraCol = 1;
-        }
-      }
+      this.createCrossBook()
     } else {
-      //for theme mode, extra word equals base word
-      this.bonus = base;
-      extraCol = 1;
+      this.createCrossTheme()
     }
     var board = Create(this.words);
-    //
 
-    if (board.length > board[0].length) {
-      this.blockSize = game.config.width / (board.length + extraCol)
-    } else {
-      this.blockSize = game.config.width / (board[0].length + extraCol)
-    }
+    /////////////////////////
 
-    var rand = Phaser.Math.Between(0, backs.length - 1)
-    var back = this.add.image(0, 0, backs[rand]).setOrigin(0)
-    back.displayWidth = game.config.width;
-    back.displayHeight = game.config.height;
-
-    /* if (this.blockSize > 90) {
-      this.blockSize = 90
-    } */
-    //console.log(this.blockSize)
+    ///////////////////////////////////////////////
+    //create game grid and bonus word, if there is one
     this.createBoard(board);
     //add the bonus word if exists.  Hints don't work on these.
     if (this.bonus) {
@@ -169,8 +128,9 @@ class playGame extends Phaser.Scene {
         this.bonusArray.push(bonusTile)
       }
     }
+    ///////////////////////
 
-    this.createKeys(base.length, base)
+    this.createKeys(this.base.length, this.base)
 
 
 
@@ -203,6 +163,9 @@ class playGame extends Phaser.Scene {
     this.backText = this.add.image(60, 80, 'home_icon').setScale(1.5).setInteractive();
     this.backText.type = 'home'
 
+    this.saveIcon = this.add.image(825, 1550, 'save_icon').setScale(2).setInteractive();
+    this.saveIcon.type = 'save'
+
     this.starBack = this.add.image(640, 75, 'platform').setOrigin(0, .5).setTint(0x000000).setAlpha(.7);
     this.starBack.displayWidth = 250
     this.starBack.displayHeight = 75
@@ -227,6 +190,57 @@ class playGame extends Phaser.Scene {
   update() {
 
   }
+  createCrossBook() {
+    this.base = sourceWords[onLevel]
+    var wordMax = groups[onBook].wordMax
+    //get a list of words based on the source word
+    var wordCombos = findWords(this.base);
+    //filter out 2 or 3 letter words based on setting for group or theme
+    var finalCombo = wordCombos.filter(this.filterList)
+    //shuffle remaining words
+    var finalCombo1 = this.shuffle(finalCombo)
+    //slice out the number of words to satisfy puzzle
+    this.words = finalCombo1.slice(0, wordMax);
+    //start with no bonus word ;
+
+    //for book mode, get bonus word if
+    //there are extra available words
+    if (finalCombo1.length > wordMax) {
+      this.extra = finalCombo1.slice(wordMax);
+      //and more than 3 of them
+      if (this.extra.length > 3) {
+        this.extra.sort();
+        //grab largest word (sort above)
+        this.bonus = this.extra.pop()
+        //add extra column to grid so there is room
+        this.extraCol = 1;
+      }
+    }
+  }
+  createCrossTheme() {
+    this.base = sourceWordsTheme[onPuzzle]
+    var wordMax = themes[onTheme].wordMax
+    //get a list of words based on the source word
+    var wordCombos = findWords(this.base);
+    //filter out 2 or 3 letter words based on setting for group or theme
+    var finalCombo = wordCombos.filter(this.filterList)
+    //for theme mode, remove the base word from selection in puzzle. Will be used for bonus word
+    const index = finalCombo.indexOf(this.base);
+    if (index > -1) {
+      finalCombo.splice(index, 1);
+    }
+    //shuffle remaining words
+    var finalCombo1 = this.shuffle(finalCombo)
+    //slice out the number of words to satisfy puzzle
+    this.words = finalCombo1.slice(0, wordMax);
+    //start with no bonus word ;
+    //for theme mode, extra word equals base word
+    this.bonus = this.base;
+    this.extraCol = 1;
+  }
+  loadLevel() {
+
+  }
   clickDot(pointer, tile) {
     //console.log(tile)
     if (tile.type == 'shuffle') {
@@ -241,6 +255,10 @@ class playGame extends Phaser.Scene {
       this.scene.stop();
       this.scene.start('home');
 
+      return
+    }
+    if (tile.type == 'save') {
+      this.saveLevel()
       return
     }
     if (tile.type == 'letterClue') {
@@ -458,10 +476,11 @@ class playGame extends Phaser.Scene {
           delay: i * 50
         })
       }
+      this.foundBonus = true;
       this.bonusFound += this.bonusArray.length;
       this.bonusText.setText(this.bonusFound)
     } else if (ScrabbleWordList.indexOf(answer) > -1) {
-      //found bonus
+      //found extra
       this.foundWords.push(answer)
 
 
@@ -650,8 +669,29 @@ class playGame extends Phaser.Scene {
     }
 
   }
+  saveLevel() {
+
+    levelSaveDefault.baseWord = this.base;
+    levelSaveDefault.words = this.words;
+    levelSaveDefault.grid = this.grid;
+    levelSaveDefault.bonusWord = this.bonus;
+    levelSaveDefault.bonusFound = this.foundBonus;
+    levelSaveDefault.foundWords = this.foundWords;
+    levelSaveDefault.puzzleFound = this.puzzleFound;
+    levelSaveDefault.gameMode = gameMode;
+    levelSaveDefault.group = onBook;
+    levelSaveDefault.level = onLevel;
+
+    localStorage.setItem('WSsave', JSON.stringify(levelSaveDefault));
+  }
   createBoard(board) {
     //console.log(board)
+    if (board.length > board[0].length) {
+      this.blockSize = game.config.width / (board.length + this.extraCol)
+    } else {
+      this.blockSize = game.config.width / (board[0].length + this.extraCol)
+    }
+
     this.grid = []
     for (var i = 0; i < board.length; i++) {
       var gridT = []
@@ -663,7 +703,7 @@ class playGame extends Phaser.Scene {
           tileAnswer.displayWidth = this.blockSize
           tileAnswer.displayHeight = this.blockSize
           tileAnswer.setPosition(xpos, ypos)
-          tileAnswer.word = board[i][j].word
+          //tileAnswer.word = board[i][j].word
           tileAnswer.direction = board[i][j].dir
           var ind = this.tileLetters.indexOf(board[i][j].letter)
           tileAnswer.index = ind

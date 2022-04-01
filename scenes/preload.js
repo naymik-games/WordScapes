@@ -29,6 +29,8 @@ class preloadGame extends Phaser.Scene {
     this.load.image("home", "assets/sprites/home.png");
     this.load.image("home_icon", "assets/sprites/home_button.png");
     this.load.image("settings_icon", "assets/sprites/settings_button.png");
+    this.load.image("save_icon", "assets/sprites/save_button.png");
+    this.load.image("open_icon", "assets/sprites/open_button.png");
     this.load.image("check", "assets/sprites/check.png");
     this.load.spritesheet("select_icons", "assets/sprites/select_icons.png", {
       frameWidth: 300,
