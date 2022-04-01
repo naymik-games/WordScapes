@@ -155,12 +155,12 @@ class playGame extends Phaser.Scene {
         bonusTile.letter = this.bonus[b]
 
         var ind = this.tileLetters.indexOf(bonusTile.letter)
-        console.log(ind)
+        //console.log(ind)
         bonusTile.index = ind
         this.bonusArray.push(bonusTile)
       }
       if (load) {
-        console.log(this.bonusFound)
+        //console.log(this.bonusFound)
         if (this.foundBonus) {
           //console.log('loading...')
           this.revealBonus()
