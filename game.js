@@ -43,7 +43,21 @@ class playGame extends Phaser.Scene {
       this.music.play();
     }
 
+    if (load) {
+      loadData = JSON.parse(localStorage.getItem('WSsave'));
+      /*      baseWord: '',
+           words: [],
+           grid: [],
+           bonusWord: '',
+           bounsFound: false,
+           foundWords: [],
+           puzzleFound: 0,
+           gameMode: 'book',
+           group: 0,
+           level: 0, */
+      var extraCount = loadData.foundWords.length - loadData.puzzleFound;
 
+    }
 
     this.bgcolors = [0x474646, 0xba9696, 0x96baa4, 0x96bab6, 0x96adba, 0x222222];
 
@@ -84,7 +98,7 @@ class playGame extends Phaser.Scene {
     this.scoreList = [];
     this.foundWords = [];
     this.puzzleFound = 0;
-    this.bonusFound = 0;
+    this.bonusFound = load ? extraCount : 0;
     this.selected = null;
     this.revealLetter = false;
     this.revealWord = false;
@@ -98,20 +112,33 @@ class playGame extends Phaser.Scene {
     }
 
     //////////////////////////////////////////
+    if (load) {
+      gameMode = loadData.gameMode;
+      if (gameMode == 'book') {
+        onBook = loadData.group;
+        onLevel = loadData.level
+      } else {
+        onTheme = loadData.group;
+        onPuzzle = loadData.level
+      }
 
-    //create word list and set up crossword layout based on game mode
-    if (gameMode == 'book') {
-      this.createCrossBook()
+      this.loadLevel();
     } else {
-      this.createCrossTheme()
+      //create word list and set up crossword layout based on game mode
+      if (gameMode == 'book') {
+        this.createCrossBook()
+      } else {
+        this.createCrossTheme()
+      }
+      var board = Create(this.words);
+      //create game grid and bonus word, if there is one
+      this.createBoard(board);
     }
-    var board = Create(this.words);
 
     /////////////////////////
 
     ///////////////////////////////////////////////
-    //create game grid and bonus word, if there is one
-    this.createBoard(board);
+
     //add the bonus word if exists.  Hints don't work on these.
     if (this.bonus) {
       this.bonusArray = []
@@ -177,7 +204,7 @@ class playGame extends Phaser.Scene {
     this.guessText = this.add.bitmapText(450, 990, 'clarendon', '', 130).setOrigin(.5).setTint(0xffffff).setMaxWidth(700);
     this.guessFakeText = this.add.bitmapText(450, 990, 'clarendon', '', 130).setOrigin(.5).setTint(0xffffff).setMaxWidth(700);
 
-    this.bonusText = this.add.bitmapText(100, 1555, 'clarendon', 0, 60).setOrigin(.5).setTint(0x000000).setMaxWidth(700);
+    this.bonusText = this.add.bitmapText(100, 1555, 'clarendon', this.bonusFound, 60).setOrigin(.5).setTint(0x000000).setMaxWidth(700);
     this.shuffleButton = this.add.image(75, 1125, 'tile-icons', 0).setInteractive()
     this.shuffleButton.type = 'shuffle'
     this.letterButton = this.add.image(825, 1125, 'tile-icons', 1).setInteractive()
@@ -238,9 +265,7 @@ class playGame extends Phaser.Scene {
     this.bonus = this.base;
     this.extraCol = 1;
   }
-  loadLevel() {
 
-  }
   clickDot(pointer, tile) {
     //console.log(tile)
     if (tile.type == 'shuffle') {
@@ -258,6 +283,7 @@ class playGame extends Phaser.Scene {
       return
     }
     if (tile.type == 'save') {
+
       this.saveLevel()
       return
     }
@@ -458,6 +484,8 @@ class playGame extends Phaser.Scene {
           if (this.puzzleFound == this.words.length) {
             this.levelEnd()
 
+          } else {
+            this.saveLevel()
           }
         }
       });
@@ -567,7 +595,7 @@ class playGame extends Phaser.Scene {
 
 
 
-
+        localStorage.removeItem('WSsave');
         this.saveData();
         if (gameData.music) {
           this.music.pause();
@@ -670,7 +698,12 @@ class playGame extends Phaser.Scene {
 
   }
   saveLevel() {
-
+    var tween = this.tweens.add({
+      targets: this.saveIcon,
+      scale: 1.5,
+      yoyo: true,
+      duration: 100
+    })
     levelSaveDefault.baseWord = this.base;
     levelSaveDefault.words = this.words;
     levelSaveDefault.grid = this.grid;
@@ -679,10 +712,67 @@ class playGame extends Phaser.Scene {
     levelSaveDefault.foundWords = this.foundWords;
     levelSaveDefault.puzzleFound = this.puzzleFound;
     levelSaveDefault.gameMode = gameMode;
-    levelSaveDefault.group = onBook;
-    levelSaveDefault.level = onLevel;
+    levelSaveDefault.group = (gameMode == 'book') ? onBook : onTheme;
+    levelSaveDefault.level = (gameMode == 'book') ? onLevel : onPuzzle;
 
     localStorage.setItem('WSsave', JSON.stringify(levelSaveDefault));
+  }
+  loadLevel() {
+    this.grid = loadData.grid
+    this.base = loadData.baseWord;
+    this.words = loadData.words;
+    this.bonus = loadData.bonusWord;
+    this.foundWords = loadData.foundWords;
+    this.puzzleFound = loadData.puzzleFound;
+    this.extraCol = (loadData.bonusWord == null) ? 0 : 1;
+    if (this.grid.length > this.grid[0].length) {
+      this.blockSize = game.config.width / (this.grid.length + this.extraCol)
+    } else {
+      this.blockSize = game.config.width / (this.grid[0].length + this.extraCol)
+    }
+    //create board///////////////////////////
+    this.board = []
+    for (var i = 0; i < this.grid.length; i++) {
+      var boardT = []
+      for (var j = 0; j < this.grid[0].length; j++) {
+        if (this.grid[i][j] != '-') {
+          var tile = {}
+          var xpos = 25 + j * this.blockSize
+          var ypos = 150 + i * this.blockSize
+          var tileAnswer = this.answerTiles.get();
+          tileAnswer.displayWidth = this.blockSize
+          tileAnswer.displayHeight = this.blockSize
+          tileAnswer.setPosition(xpos, ypos)
+          var ind = this.tileLetters.indexOf(this.grid[i][j])
+          tileAnswer.index = ind
+          tileAnswer.setInteractive()
+          tileAnswer.type = 'answer'
+          tile.tile = tileAnswer
+          tile.letter = this.grid[i][j]
+          boardT.push(tile)
+
+
+        } else {
+          boardT.push(null)
+        }
+
+
+      }
+      this.board.push(boardT)
+    }
+    console.log(this.board)
+    //console.log(this.foundWords)
+    //console.log(this.words)
+    for (var w = 0; w < this.foundWords.length; w++) {
+      if (this.words.indexOf(this.foundWords[w]) > -1) {
+        this.revealAnswer(this.foundWords[w])
+      }
+    }
+    load = false;
+    //////////////////////////////////
+    localStorage.removeItem('WSsave');
+
+
   }
   createBoard(board) {
     //console.log(board)
@@ -723,7 +813,7 @@ class playGame extends Phaser.Scene {
       this.grid.push(gridT)
     }
     this.board = board
-    console.log(this.grid)
+    console.log(this.board)
 
     //this.patternSearch(this.grid, this.words[1])
   }

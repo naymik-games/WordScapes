@@ -4,6 +4,7 @@ let onPuzzle = 0;
 let onBook = 0;
 let onTheme = 0;
 let bonusEarned = 0;
+let load = false;
 let gameData;
 let defaultData = {
   coins: 0,
@@ -15,6 +16,7 @@ let defaultData = {
   tileOption: 0,
   music: true
 }
+let loadData;
 let levelSaveDefault = {
   baseWord: '',
   words: [],

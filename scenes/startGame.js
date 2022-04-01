@@ -39,12 +39,14 @@ class home extends Phaser.Scene {
       this.scene.launch('options')
     }, this);
 
-    this.openIcon = this.add.image(825, 1550, 'open_icon').setScale(2).setInteractive();
-    this.openIcon.on('pointerdown', function () {
-      this.scene.pause();
-      this.scene.launch('options')
-    }, this);
-
+    if (localStorage.getItem('WSsave') !== null) {
+      this.openIcon = this.add.image(825, 1550, 'open_icon').setScale(2).setInteractive();
+      this.openIcon.on('pointerdown', function () {
+        load = true;
+        //gameMode = 'book'
+        this.scene.start("PlayGame");
+      }, this);
+    }
     this.title = this.add.bitmapText(game.config.width / 2, 300, 'clarendon', 'WordScapes', 140).setTint(0xffffff).setOrigin(.5).setMaxWidth(500);
 
 
