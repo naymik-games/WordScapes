@@ -39,9 +39,9 @@ class options extends Phaser.Scene {
 
     this.check = this.add.image(0, 0, 'check').setScale(1.75)
     for (var i = 0; i < tileImages.length; i++) {
-      var tile1 = this.add.image(200, this.tileYOffset + i * 150, tileImages[i], 3).setScale(1.5)
-      var tile2 = this.add.image(325, this.tileYOffset + i * 150, tileImages[i], 0).setScale(1.5)
-      var tile3 = this.add.image(450, this.tileYOffset + i * 150, tileImages[i], 13).setScale(1.5)
+      var tile1 = this.add.image(200, this.tileYOffset + i * 150, tileImages[i], 3).setScale(1)
+      var tile2 = this.add.image(325, this.tileYOffset + i * 150, tileImages[i], 0).setScale(1)
+      var tile3 = this.add.image(450, this.tileYOffset + i * 150, tileImages[i], 13).setScale(1)
       var temp = i + 1
       var label = this.add.bitmapText(550, this.tileYOffset + i * 150, 'clarendon', 'Tile ' + temp, 80).setOrigin(0, .5).setTint(0xffffff).setInteractive();
       label.button = i

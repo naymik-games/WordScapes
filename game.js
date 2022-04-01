@@ -154,6 +154,13 @@ class playGame extends Phaser.Scene {
         bonusTile.index = ind
         this.bonusArray.push(bonusTile)
       }
+      if (load) {
+        console.log(this.bonusFound)
+        if (this.foundBonus) {
+          console.log('loading...')
+          this.revealBonus()
+        }
+      }
     }
     ///////////////////////
 
@@ -212,6 +219,8 @@ class playGame extends Phaser.Scene {
     this.wordButton = this.add.image(825, 1230, 'tile-icons', 2).setInteractive()
     this.wordButton.type = 'wordClue'
 
+    //turn flag off after all load actions are done
+    load = false;
   }
 
   update() {
@@ -493,20 +502,12 @@ class playGame extends Phaser.Scene {
 
     } else if (answer == this.bonus) {
       //found bonus word
-      for (var i = 0; i < this.bonusArray.length; i++) {
-        console.log(this.bonusArray[i].ind)
-        this.bonusArray[i].setFrame(this.bonusArray[i].index)
-        var tween = this.tweens.add({
-          targets: this.bonusArray[i],
-          scale: 1.3,
-          yoyo: true,
-          duration: 200,
-          delay: i * 50
-        })
-      }
+      this.revealBonus()
+
       this.foundBonus = true;
       this.bonusFound += this.bonusArray.length;
       this.bonusText.setText(this.bonusFound)
+      this.saveLevel()
     } else if (ScrabbleWordList.indexOf(answer) > -1) {
       //found extra
       this.foundWords.push(answer)
@@ -645,6 +646,19 @@ class playGame extends Phaser.Scene {
 
 
   }
+  revealBonus() {
+    for (var i = 0; i < this.bonusArray.length; i++) {
+      //console.log(this.bonusArray[i].ind)
+      this.bonusArray[i].setFrame(this.bonusArray[i].index)
+      var tween = this.tweens.add({
+        targets: this.bonusArray[i],
+        scale: 1.3,
+        yoyo: true,
+        duration: 200,
+        delay: i * 50
+      })
+    }
+  }
   /* revealAnswer_(answer) {
     console.log(this.board)
     for (var i = 0; i < this.board.length; i++) {
@@ -704,6 +718,7 @@ class playGame extends Phaser.Scene {
       yoyo: true,
       duration: 100
     })
+    let levelSaveDefault = {}
     levelSaveDefault.baseWord = this.base;
     levelSaveDefault.words = this.words;
     levelSaveDefault.grid = this.grid;
@@ -722,6 +737,7 @@ class playGame extends Phaser.Scene {
     this.base = loadData.baseWord;
     this.words = loadData.words;
     this.bonus = loadData.bonusWord;
+    this.foundBonus = loadData.bonusFound;
     this.foundWords = loadData.foundWords;
     this.puzzleFound = loadData.puzzleFound;
     this.extraCol = (loadData.bonusWord == null) ? 0 : 1;
@@ -768,7 +784,7 @@ class playGame extends Phaser.Scene {
         this.revealAnswer(this.foundWords[w])
       }
     }
-    load = false;
+
     //////////////////////////////////
     localStorage.removeItem('WSsave');
 
