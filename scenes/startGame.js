@@ -40,10 +40,18 @@ class home extends Phaser.Scene {
     }, this);
 
     if (localStorage.getItem('WSsave') !== null) {
-      this.openIcon = this.add.image(825, 1550, 'open_icon').setScale(2).setInteractive();
+      this.openIcon = this.add.image(825, 1105, 'open_icon').setScale(2).setInteractive();
       this.openIcon.on('pointerdown', function () {
         load = true;
-        //gameMode = 'book'
+        gameMode = 'book'
+        this.scene.start("PlayGame");
+      }, this);
+    }
+    if (localStorage.getItem('WSsaveT') !== null) {
+      this.openIconT = this.add.image(825, 1405, 'open_icon').setScale(2).setInteractive();
+      this.openIconT.on('pointerdown', function () {
+        load = true;
+        gameMode = 'theme'
         this.scene.start("PlayGame");
       }, this);
     }

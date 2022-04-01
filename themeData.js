@@ -2,7 +2,8 @@
 let themes = [
   { title: 'Star Wars', startNum: 0, wordMax: 12, allow3: true },
   { title: 'LOTR', startNum: 6, wordMax: 12, allow3: true },
-  { title: 'Education', startNum: 12, wordMax: 12, allow3: true }
+  { title: 'Education', startNum: 12, wordMax: 12, allow3: true },
+  { title: 'Internet', startNum: 18, wordMax: 10, allow3: true }
 ]
 let sourceWordsTheme = [
   //star wars
@@ -26,5 +27,12 @@ let sourceWordsTheme = [
   'school',
   'apple',
   'learning',
+  //internet
+  'tab',
+  'server',
+  'browser',
+  'domain',
+  'search',
+  'website'
 
 ]

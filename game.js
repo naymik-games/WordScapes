@@ -42,9 +42,14 @@ class playGame extends Phaser.Scene {
       this.music = this.sound.add('music_01');
       this.music.play();
     }
-
+    if (gameMode == 'book') {
+      this.sKey = 'WSsave'
+    } else {
+      this.sKey = 'WSsaveT'
+    }
     if (load) {
-      loadData = JSON.parse(localStorage.getItem('WSsave'));
+
+      loadData = JSON.parse(localStorage.getItem(this.sKey));
       /*      baseWord: '',
            words: [],
            grid: [],
@@ -113,7 +118,7 @@ class playGame extends Phaser.Scene {
 
     //////////////////////////////////////////
     if (load) {
-      gameMode = loadData.gameMode;
+      //gameMode = loadData.gameMode;
       if (gameMode == 'book') {
         onBook = loadData.group;
         onLevel = loadData.level
@@ -157,7 +162,7 @@ class playGame extends Phaser.Scene {
       if (load) {
         console.log(this.bonusFound)
         if (this.foundBonus) {
-          console.log('loading...')
+          //console.log('loading...')
           this.revealBonus()
         }
       }
@@ -596,7 +601,7 @@ class playGame extends Phaser.Scene {
 
 
 
-        localStorage.removeItem('WSsave');
+        localStorage.removeItem(this.sKey);
         this.saveData();
         if (gameData.music) {
           this.music.pause();
@@ -730,7 +735,7 @@ class playGame extends Phaser.Scene {
     levelSaveDefault.group = (gameMode == 'book') ? onBook : onTheme;
     levelSaveDefault.level = (gameMode == 'book') ? onLevel : onPuzzle;
 
-    localStorage.setItem('WSsave', JSON.stringify(levelSaveDefault));
+    localStorage.setItem(this.sKey, JSON.stringify(levelSaveDefault));
   }
   loadLevel() {
     this.grid = loadData.grid
@@ -829,7 +834,7 @@ class playGame extends Phaser.Scene {
       this.grid.push(gridT)
     }
     this.board = board
-    console.log(this.board)
+    //console.log(this.board)
 
     //this.patternSearch(this.grid, this.words[1])
   }
