@@ -37,25 +37,25 @@ class selectLevel extends Phaser.Scene {
     if (swipeMagnitude > 20 && swipeTime < 1000 && (Math.abs(swipeNormal.y) > 0.8 || Math.abs(swipeNormal.x) > 0.8)) {
 
       if (swipeNormal.x > 0.8) {
-        console.log('right')
+
         //this.handleMove(0, 1, );
         this.nextGroup(obj[0], 'left')
       }
       if (swipeNormal.x < -0.8) {
-        console.log('left')
+
 
         this.preGroup(obj[0], 'right')
       }
       if (swipeNormal.y > 0.8) {
-        console.log('down')
+
         //this.handleMove(1, 0);
       }
       if (swipeNormal.y < -0.8) {
-        console.log('up')
+
         //this.handleMove(-1, 0);
       }
     } else {
-      console.log('tap')
+
       if (obj[0].level > -1) {
         onLevel = obj[0].level;
         onBook = this.startGroup;

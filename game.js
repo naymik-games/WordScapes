@@ -160,9 +160,9 @@ class playGame extends Phaser.Scene {
         this.bonusArray.push(bonusTile)
       }
       if (load) {
-        //console.log(this.bonusFound)
+
         if (this.foundBonus) {
-          //console.log('loading...')
+
           this.revealBonus()
         }
       }
@@ -281,7 +281,7 @@ class playGame extends Phaser.Scene {
   }
 
   clickDot(pointer, tile) {
-    //console.log(tile)
+
     if (tile.type == 'shuffle') {
       this.shuffleKeys()
       return
@@ -384,7 +384,7 @@ class playGame extends Phaser.Scene {
     if (tile.type == 'key') {
       this.guess += tile.letter
       tile.setAlpha(.5)
-      //console.log(this.guess)
+
       this.guessText.setText(this.guess);
       this.selected = tile;
       this.scoreList.push(tile);
@@ -410,8 +410,6 @@ class playGame extends Phaser.Scene {
         // If the Item is in the list (but isn't the previous item) then you've made a loop
         //this.looped = true;
       } else {
-        //console.log('sel ' + this.selected.frameNum);
-        // console.log('dot ' + dot.frameNum);
 
         this.selected = tile;
 
@@ -431,7 +429,7 @@ class playGame extends Phaser.Scene {
   }
   upDot(pointer, tile) {
     if (this.selected == null) { return }
-    //console.log(this.guess)
+
     this.selected = null
     this.graphicsLine.clear()
     this.graphicsCircle.clear()
@@ -471,7 +469,7 @@ class playGame extends Phaser.Scene {
       this.guessText.setText(this.guess);
     } else if (this.words.indexOf(answer) > -1) {
       //found puzzle word
-      // console.log('found it!')
+
       this.puzzleFound++;
 
       this.revealAnswer(answer)
@@ -635,7 +633,7 @@ class playGame extends Phaser.Scene {
   }
   revealAnswer(answer) {
     var coo = this.patternSearch(this.grid, answer)
-    //console.log(coo)
+
     for (var i = 0; i < answer.length; i++) {
       var letter = coo[i]
       this.board[letter.y][letter.x].tile.setFrame(this.board[letter.y][letter.x].tile.index);
@@ -653,7 +651,7 @@ class playGame extends Phaser.Scene {
   }
   revealBonus() {
     for (var i = 0; i < this.bonusArray.length; i++) {
-      //console.log(this.bonusArray[i].ind)
+
       this.bonusArray[i].setFrame(this.bonusArray[i].index)
       var tween = this.tweens.add({
         targets: this.bonusArray[i],
@@ -664,19 +662,7 @@ class playGame extends Phaser.Scene {
       })
     }
   }
-  /* revealAnswer_(answer) {
-    console.log(this.board)
-    for (var i = 0; i < this.board.length; i++) {
-      for (var j = 0; j < this.board[0].length; j++) {
-        if (this.board[i][j] != null) {
-          if (this.board[i][j].tile.word == answer) {
-            console.log('y ' + i + ' x ' + j)
-            this.board[i][j].tile.setFrame(this.board[i][j].tile.index)
-          }
-        }
-      }
-    }
-  } */
+
   filterList(item) {
     if (groups[onBook].allow3) {
       return item.length > 2;
@@ -699,12 +685,12 @@ class playGame extends Phaser.Scene {
       tile.type = 'key'
       this.keys.push(tile)
     }
-    // console.log(this.keys)
+
 
   }
   shuffleKeys() {
     this.shuffle(this.keyCoordinates)
-    // console.log('shuffle keys')
+
     for (var i = 0; i < this.keys.length; i++) {
       // this.keys[i].setPosition(this.keyCoordinates[i].x, this.keyCoordinates[i].y)
       var tween = this.tweens.add({
@@ -781,9 +767,8 @@ class playGame extends Phaser.Scene {
       }
       this.board.push(boardT)
     }
-    console.log(this.board)
-    //console.log(this.foundWords)
-    //console.log(this.words)
+
+
     for (var w = 0; w < this.foundWords.length; w++) {
       if (this.words.indexOf(this.foundWords[w]) > -1) {
         this.revealAnswer(this.foundWords[w])
@@ -796,7 +781,7 @@ class playGame extends Phaser.Scene {
 
   }
   createBoard(board) {
-    //console.log(board)
+
     if (board.length > board[0].length) {
       this.blockSize = game.config.width / (board.length + this.extraCol)
     } else {
@@ -822,8 +807,7 @@ class playGame extends Phaser.Scene {
           tileAnswer.type = 'answer'
           board[i][j].tile = tileAnswer
           gridT.push(board[i][j].letter)
-          //tileAnswer.setFrame(ind)
-          //console.log(tileAnswer.word)
+
 
         } else {
           gridT.push('-')
@@ -834,19 +818,17 @@ class playGame extends Phaser.Scene {
       this.grid.push(gridT)
     }
     this.board = board
-    //console.log(this.board)
 
-    //this.patternSearch(this.grid, this.words[1])
   }
   patternSearch(grid, word) {
     // Consider every point as starting
-    // console.log(word)
+
     // point and search given word
     for (let row = 0; row < grid.length; row++) {
       for (let col = 0; col < grid[0].length; col++) {
         var result = this.search2D(grid, row, col, word)
         if (result) {
-          //console.log(result)
+
           return result
         }
       }
@@ -866,7 +848,7 @@ class playGame extends Phaser.Scene {
         //return false;
         break;
       coo.push({ x: col, y: row })
-      //console.log('start ' + col + ',' + row)
+
       let len = word.length;
 
       // Search word in all 8 directions
@@ -962,7 +944,7 @@ class playGame extends Phaser.Scene {
 //var foundWords = document.getElementById('words');
 
 var findWords = function (letterInput) {
-  //  console.log(ScrabbleWordFinder.find(letterInput));
+
   return ScrabbleWordFinder.find(letterInput);
 
   //foundWords.innerHTML = ScrabbleWordFinder.find(letterInput.value.toLowerCase()).join('\n');
@@ -981,7 +963,6 @@ var ScrabbleWordFinder = (() => {
 
   ScrabbleWordFinder.prototype.find = function (letters) {
 
-    //console.log(validWords(this.dict.root, letters));
     return validWords(this.dict.root, letters);
   };
 
