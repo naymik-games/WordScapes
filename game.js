@@ -148,12 +148,12 @@ class playGame extends Phaser.Scene {
     if (this.bonus) {
       this.bonusArray = []
       for (var b = 0; b < this.bonus.length; b++) {
-        var bonusTile = this.add.image(825, 200 + b * this.blockSize, tileImages[gameData.tileOption], 27)
+        var bonusTile = this.add.image(825, 200 + b * this.blockSize, tileImages[gameData.tileOption], 27).setInteractive()
         bonusTile.displayWidth = this.blockSize;
         bonusTile.displayHeight = this.blockSize;
         bonusTile.word = this.bonus
         bonusTile.letter = this.bonus[b]
-
+        bonusTile.type = 'bonus'
         var ind = this.tileLetters.indexOf(bonusTile.letter)
         //console.log(ind)
         bonusTile.index = ind
@@ -328,6 +328,56 @@ class playGame extends Phaser.Scene {
 
       return
     }
+    if (tile.type == 'bonus') {
+      if (this.revealLetter) {
+        bonusEarned -= this.letterClueCost * 2
+        gameData.coins = bonusEarned
+        this.bonusEarnedText.setText(bonusEarned)
+        this.saveData();
+        tile.setFrame(tile.index)
+        this.revealLetter = false;
+        this.letterButton.setScale(1).clearTint()
+        this.tweens.add({
+          targets: [this.bonusEarnedText],
+          x: '+=25',
+          duration: 50,
+          ease: 'Linear',
+          yoyo: true,
+          repeat: 2,
+          callbackScope: this,
+          onComplete: function () {
+            this.guess = '';
+            this.guessText.setText(this.guess);
+          }
+        });
+      } else if (this.revealWord) {
+        bonusEarned -= this.wordClueCost * 2
+        gameData.coins = bonusEarned
+        this.bonusEarnedText.setText(bonusEarned)
+        this.saveData();
+        this.revealBonus()
+        this.foundBonus = true;
+        this.revealWord = false;
+        this.wordButton.setScale(1).clearTint()
+        this.tweens.add({
+          targets: [this.bonusEarnedText],
+          x: '+=25',
+          duration: 50,
+          ease: 'Linear',
+          yoyo: true,
+          repeat: 2,
+          callbackScope: this,
+          onComplete: function () {
+            this.guess = '';
+            this.guessText.setText(this.guess);
+          }
+        });
+        if (this.checkWin()) {
+          this.levelEnd()
+        }
+      }
+      return
+    }
     if (tile.type == 'answer') {
       if (this.revealLetter) {
         bonusEarned -= this.letterClueCost
@@ -374,7 +424,7 @@ class playGame extends Phaser.Scene {
             this.guessText.setText(this.guess);
           }
         });
-        if (this.puzzleFound == this.words.length) {
+        if (this.checkWin()) {
           this.levelEnd()
         }
       } else {
@@ -493,7 +543,7 @@ class playGame extends Phaser.Scene {
           /* if (this.puzzleFound == this.words.length) {
             alert('completed!')
           } */
-          if (this.puzzleFound == this.words.length && this.foundBonus) {
+          if (this.checkWin()) {
             this.levelEnd()
 
           } else {
@@ -529,7 +579,7 @@ class playGame extends Phaser.Scene {
           /* if (this.puzzleFound == this.words.length) {
             alert('completed!')
           } */
-          if (this.puzzleFound == this.words.length && this.foundBonus) {
+          if (this.checkWin()) {
             this.levelEnd()
 
           } else {
@@ -585,6 +635,18 @@ class playGame extends Phaser.Scene {
       });
 
     }
+  }
+  checkWin() {
+    if (this.bonus) {
+      if (this.puzzleFound == this.words.length && this.foundBonus) {
+        return true
+      }
+    } else {
+      if (this.puzzleFound == this.words.length) {
+        return true
+      }
+    }
+    return false
   }
   levelEnd() {
     var tween = this.tweens.add({
