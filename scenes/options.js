@@ -7,7 +7,7 @@ class options extends Phaser.Scene {
   }
 
   create() {
-    this.tileYOffset = 1100
+    this.tileYOffset = 975
     var back = this.add.image(0, 0, 'home').setOrigin(0)
     this.return = this.add.image(75, 75, 'home_icon').setScale(2).setInteractive();
     this.return.on('pointerdown', function () {
