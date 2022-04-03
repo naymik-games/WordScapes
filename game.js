@@ -493,7 +493,7 @@ class playGame extends Phaser.Scene {
           /* if (this.puzzleFound == this.words.length) {
             alert('completed!')
           } */
-          if (this.puzzleFound == this.words.length) {
+          if (this.puzzleFound == this.words.length && this.foundBonus) {
             this.levelEnd()
 
           } else {
@@ -508,9 +508,35 @@ class playGame extends Phaser.Scene {
       this.revealBonus()
 
       this.foundBonus = true;
+      this.guessFakeText.setText(this.guess)
+      this.guess = '';
+      this.guessText.setText('');
       this.bonusFound += this.bonusArray.length;
       this.bonusText.setText(this.bonusFound)
-      this.saveLevel()
+      //animate guess word
+      this.tweens.add({
+        targets: this.guessFakeText,
+        y: 0,
+        x: game.config.width / 2,
+        alpha: { from: 1, to: .1 },
+        //scale: 1.3,
+        ease: "Linear",
+        duration: 1000,
+        callbackScope: this,
+        onComplete: function () {
+
+          this.guessFakeText.setText('');
+          /* if (this.puzzleFound == this.words.length) {
+            alert('completed!')
+          } */
+          if (this.puzzleFound == this.words.length && this.foundBonus) {
+            this.levelEnd()
+
+          } else {
+            this.saveLevel()
+          }
+        }
+      });
     } else if (ScrabbleWordList.indexOf(answer) > -1) {
       //found extra
       this.foundWords.push(answer)
