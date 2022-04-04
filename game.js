@@ -455,7 +455,7 @@ class playGame extends Phaser.Scene {
 
         tile.setAlpha(1);
         this.selected = tile;
-
+        return
       } else if (this.scoreList.indexOf(tile) > -1 && this.scoreList.length > 3) {
         // If the Item is in the list (but isn't the previous item) then you've made a loop
         //this.looped = true;
