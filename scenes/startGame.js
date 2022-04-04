@@ -32,7 +32,7 @@ class home extends Phaser.Scene {
     this.starBack.displayHeight = 75
 
     this.bonusEarnedText = this.add.bitmapText(715, 75, 'clarendon', bonusEarned, 80).setOrigin(0, .5).setTint(0xffffff).setMaxWidth(700);
-    this.starIcon = this.add.image(640, 75, 'star').setScale(.25)
+    this.starIcon = this.add.image(640, 75, 'star').setScale(3)
     this.settingsIcon = this.add.image(75, 75, 'settings_icon').setScale(2).setInteractive();
     this.settingsIcon.on('pointerdown', function () {
       this.scene.pause();
