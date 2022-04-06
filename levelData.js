@@ -7,7 +7,8 @@ let groups = [
   { title: 'Book 5', startNum: 48, wordMax: 8, allow3: true },
   { title: 'Book 6', startNum: 60, wordMax: 9, allow3: true },
   { title: 'Book 7', startNum: 72, wordMax: 9, allow3: true },
-  { title: 'Book 8', startNum: 84, wordMax: 8, allow3: true }
+  { title: 'Book 8', startNum: 84, wordMax: 8, allow3: true },
+  { title: 'Book 9', startNum: 96, wordMax: 10, allow3: true }
 ]
 let sourceWords = [
   'act',
@@ -110,8 +111,23 @@ let sourceWords = [
   'leading',
   'normal',
   'observe',
-  ' opponent'
+  ' opponent',
   //9
+  'fables',
+  'cabled',
+  'canine',
+  'tense',
+  'names',
+  'pagoda',
+  'gaped',
+  'innate',
+  'taper',
+  'canted',
+  'images',
+  'magical',
+
+
+
   /*  'hansolo',
    'blaster',
    'falcon',
