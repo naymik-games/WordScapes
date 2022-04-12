@@ -2,7 +2,7 @@
   "name": "WordScaps",
   "short_name": "WordScapes",
   "description": "From one word comes many",
-  "start_url": "/",
+  "start_url": "/WordScapes",
   "background_color": "#000000",
   "theme_color": "#0f4a73",
   "display": "standalone",
