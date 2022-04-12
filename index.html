@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset="utf-8">
     <meta name="theme-color" content="black" />
+    <link rel="canonical" href="https://naymik-games.github.io/WordScapes/" />
     <link rel="manifest" href="manifest.json" />
     <link rel="icon" href="img/icon-192.png" sizes="192x192" />
     <link rel="icon" href="img/icon-256.png" sizes="256x256" />
@@ -82,7 +83,7 @@
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', function () {
-                navigator.serviceWorker.register('/sw.js', { scope: '/' }).then(function (registration) {
+                navigator.serviceWorker.register('/sw.js', { scope: '/WordScapes/' }).then(function (registration) {
                     console.log('ServiceWorker registration successful with scope: ', registration.scope);
                 }, function (err) {
                     console.log('ServiceWorker registration failed: ', err);
