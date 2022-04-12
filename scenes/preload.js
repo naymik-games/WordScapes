@@ -42,7 +42,7 @@ class preloadGame extends Phaser.Scene {
     });
     this.load.image("platform", "assets/platform.png");
     this.load.image("particle", "assets/sprites/particle.png");
-    this.load.text('dictionary', 'assets/dictionary-plural1.txt');
+    //this.load.text('dictionary', 'assets/dictionary-plural1.txt');
     this.load.spritesheet("tile-icons", "assets/sprites/tile_icons.png", {
 
       frameWidth: 80,
